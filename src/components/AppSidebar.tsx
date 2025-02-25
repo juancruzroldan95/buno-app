@@ -1,24 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import {
-  Calendar,
-  ChevronUp,
-  Home,
-  Inbox,
-  Search,
-  Settings,
-  User2,
-  UserPen,
-  CreditCard,
-  Sparkles,
-  BadgeCheck,
-  Bell,
-  LogOut,
-} from "lucide-react";
-
+// UI
 import {
   Sidebar,
   SidebarContent,
@@ -41,7 +27,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Link from "next/link";
+import {
+  Calendar,
+  ChevronUp,
+  Home,
+  Inbox,
+  Search,
+  Settings,
+  User2,
+  UserPen,
+  CreditCard,
+  Sparkles,
+  BadgeCheck,
+  Bell,
+  LogOut,
+} from "lucide-react";
+
+// Lib
 import { logout } from "@/firebase/auth";
 
 // Menu items.
@@ -99,7 +101,7 @@ export function AppSidebar() {
   }
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" variant="sidebar">
       <SidebarHeader className="ml-1">
         <Image
           src="/buno-coffee-bar-transparent-2.png"
