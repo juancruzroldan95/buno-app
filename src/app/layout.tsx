@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { geistSans, geistMono } from "./fonts";
+import { lusitana } from "./fonts";
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/toaster";
@@ -16,9 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${lusitana.className} antialiased`}>
         {children}
         <Toaster />
       </body>

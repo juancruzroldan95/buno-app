@@ -75,7 +75,7 @@ export default function Header() {
         <div className="hidden md:flex space-x-4">
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="default" className="text-md">
+              <Button variant="default" className="text-lg">
                 Publicá tu caso
               </Button>
             </DialogTrigger>
