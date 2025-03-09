@@ -1,7 +1,3 @@
-"use client";
-
-import { useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -29,55 +25,42 @@ import {
 const mockExperience = [
   {
     id: 1,
-    company: "Smith & Associates",
-    position: "Senior Attorney",
+    company: "Keital & Keital Asociados",
+    position: "Abogado Senior",
     startDate: new Date("2020-01-01"),
     endDate: new Date("2023-12-31"),
     description:
-      "Led a team of junior attorneys in handling complex corporate litigation cases. Managed client relationships and provided strategic legal advice to Fortune 500 companies.",
+      "Lideré un equipo de abogados junior en la gestión de casos complejos de litigio corporativo. Gestioné las relaciones con los clientes y brindé asesoramiento legal estratégico a empresas Fortune 500.",
   },
   {
     id: 2,
-    company: "Legal Corp",
-    position: "Associate Attorney",
+    company: "Newtopia",
+    position: "Abogado Asociado",
     startDate: new Date("2015-06-01"),
     endDate: new Date("2019-12-31"),
     description:
-      "Specialized in intellectual property law, handling patent applications and trademark disputes. Worked closely with technology startups and established businesses.",
+      "Me especialicé en derecho de propiedad intelectual, gestionando solicitudes de patentes y disputas de marcas registradas. Trabajé estrechamente con startups tecnológicas y empresas consolidadas.",
   },
 ];
 
 const mockEducation = [
   {
     id: 1,
-    institution: "Harvard Law School",
+    institution: "Facultad de Derecho de Harvard",
     degree: "Juris Doctor",
-    field: "Law",
+    field: "Derecho",
     graduationDate: new Date("2015-05-15"),
   },
   {
     id: 2,
-    institution: "University of Pennsylvania",
-    degree: "Bachelor of Arts",
-    field: "Political Science",
+    institution: "Universidad de Pensilvania",
+    degree: "Licenciatura en Artes",
+    field: "Ciencias Políticas",
     graduationDate: new Date("2012-05-15"),
   },
 ];
 
 export default function ProfilePage() {
-  const [experiences, setExperiences] = useState(mockExperience);
-  const [education, setEducation] = useState(mockEducation);
-  const [isAddingExperience, setIsAddingExperience] = useState(false);
-  const [isAddingEducation, setIsAddingEducation] = useState(false);
-
-  function deleteExperience(id: number) {
-    setExperiences(experiences.filter((exp) => exp.id !== id));
-  }
-
-  function deleteEducation(id: number) {
-    setEducation(education.filter((edu) => edu.id !== id));
-  }
-
   return (
     <div className="w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-8">
@@ -128,29 +111,25 @@ export default function ProfilePage() {
                       Agregá o actualizá tu experiencia laboral
                     </CardDescription>
                   </div>
-                  <Button
-                    onClick={() => setIsAddingExperience(true)}
-                    disabled={isAddingExperience}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Agregar Experiencia
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Agregar Experiencia
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader className="mb-2">
+                        <DialogTitle>Agregar Nueva Experiencia</DialogTitle>
+                      </DialogHeader>
+                      <ExperienceForm />
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CardHeader>
               <CardContent>
-                {isAddingExperience && (
-                  <Card className="mb-6">
-                    <CardHeader>
-                      <CardTitle>Agregar Nueva Experiencia</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ExperienceForm />
-                    </CardContent>
-                  </Card>
-                )}
-
                 <div className="space-y-6">
-                  {experiences.map((exp) => (
+                  {mockExperience.map((exp) => (
                     <Card key={exp.id}>
                       <CardHeader>
                         <div className="flex justify-between items-start">
@@ -158,11 +137,7 @@ export default function ProfilePage() {
                             <CardTitle>{exp.position}</CardTitle>
                             <CardDescription>{exp.company}</CardDescription>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => deleteExperience(exp.id)}
-                          >
+                          <Button variant="ghost" size="icon">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -210,19 +185,8 @@ export default function ProfilePage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {isAddingEducation && (
-                  <Card className="mb-6">
-                    <CardHeader>
-                      <CardTitle>Agregar Nueva Educación</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <EducationForm />
-                    </CardContent>
-                  </Card>
-                )}
-
                 <div className="space-y-6">
-                  {education.map((edu) => (
+                  {mockEducation.map((edu) => (
                     <Card key={edu.id}>
                       <CardHeader>
                         <div className="flex justify-between items-start">
@@ -230,11 +194,7 @@ export default function ProfilePage() {
                             <CardTitle>{edu.degree}</CardTitle>
                             <CardDescription>{edu.institution}</CardDescription>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => deleteEducation(edu.id)}
-                          >
+                          <Button variant="ghost" size="icon">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>

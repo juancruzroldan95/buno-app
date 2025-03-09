@@ -27,16 +27,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { DialogFooter } from "@/components/ui/dialog";
 
 export default function ExperienceForm() {
   const experienceFormSchema = z.object({
-    company: z.string().min(2, "Company name is required"),
-    position: z.string().min(2, "Position is required"),
-    startDate: z.date(),
+    company: z
+      .string({ required_error: "El nombre de la empresa es obligatorio" })
+      .min(2, "Debe tener al menos 2 caracteres"),
+    position: z
+      .string({ required_error: "La posición es obligatoria" })
+      .min(2, "Debe tener al menos 2 caracteres"),
+    startDate: z.date({
+      required_error: "La fecha de inicio es obligatoria",
+    }),
     endDate: z.date().optional(),
     description: z
-      .string()
-      .min(50, "Description must be at least 50 characters"),
+      .string({ required_error: "La descripción es obligatoria" })
+      .min(50, "La descripción debe tener al menos 50 caracteres"),
   });
 
   const experienceForm = useForm<z.infer<typeof experienceFormSchema>>({
@@ -65,7 +72,7 @@ export default function ExperienceForm() {
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs ms-1 mt-1" />
             </FormItem>
           )}
         />
@@ -78,7 +85,7 @@ export default function ExperienceForm() {
               <FormControl>
                 <Input {...field} />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs ms-1 mt-1" />
             </FormItem>
           )}
         />
@@ -89,7 +96,7 @@ export default function ExperienceForm() {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Fecha Inicio</FormLabel>
-                <Popover>
+                <Popover modal={true}>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
@@ -120,7 +127,7 @@ export default function ExperienceForm() {
                     />
                   </PopoverContent>
                 </Popover>
-                <FormMessage />
+                <FormMessage className="text-xs ms-1 mt-1" />
               </FormItem>
             )}
           />
@@ -130,7 +137,7 @@ export default function ExperienceForm() {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Fecha Fin</FormLabel>
-                <Popover>
+                <Popover modal={true}>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
@@ -161,7 +168,9 @@ export default function ExperienceForm() {
                     />
                   </PopoverContent>
                 </Popover>
-                <FormMessage />
+                <FormMessage className="text-xs ms-1 mt-1 text-gray-500">
+                  Dejá el campo libre si aún trabajas acá
+                </FormMessage>
               </FormItem>
             )}
           />
@@ -175,16 +184,13 @@ export default function ExperienceForm() {
               <FormControl>
                 <Textarea {...field} className="h-32" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs ms-1 mt-1" />
             </FormItem>
           )}
         />
-        <div className="flex space-x-2">
+        <DialogFooter className="mt-2">
           <Button type="submit">Guardar Experiencia</Button>
-          <Button type="button" variant="outline">
-            Cancelar
-          </Button>
-        </div>
+        </DialogFooter>
       </form>
     </Form>
   );

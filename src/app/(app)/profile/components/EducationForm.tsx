@@ -30,9 +30,15 @@ import { DialogFooter } from "@/components/ui/dialog";
 
 export default function EducationForm() {
   const educationFormSchema = z.object({
-    institution: z.string().min(2, "Nombre de la institución es requerido"),
-    field: z.string().min(2, "El título es requerido"),
-    graduationDate: z.date(),
+    institution: z
+      .string({ required_error: "Nombre de la institución es requerido" })
+      .min(2, "Debe tener al menos 2 caracteres"),
+    field: z
+      .string({ required_error: "El título es requerido" })
+      .min(2, "Debe tener al menos 2 caracteres"),
+    graduationDate: z.date({
+      required_error: "La fecha de graduación es requerida",
+    }),
   });
 
   const educationForm = useForm<z.infer<typeof educationFormSchema>>({
@@ -48,18 +54,18 @@ export default function EducationForm() {
     <Form {...educationForm}>
       <form
         onSubmit={educationForm.handleSubmit(onEducationSubmit)}
-        className="grid gap-4"
+        className="space-y-4"
       >
         <FormField
           control={educationForm.control}
           name="institution"
           render={({ field }) => (
-            <FormItem className="grid grid-cols-4 items-center gap-4">
+            <FormItem className="grid grid-cols-4 items-center gap-x-4">
               <FormLabel className="text-right">Institución</FormLabel>
               <FormControl>
                 <Input {...field} className="col-span-3" />
               </FormControl>
-              <FormMessage className="col-span-4" />
+              <FormMessage className="col-span-3 col-start-2 text-xs ms-1 mt-1" />
             </FormItem>
           )}
         />
@@ -67,12 +73,12 @@ export default function EducationForm() {
           control={educationForm.control}
           name="field"
           render={({ field }) => (
-            <FormItem className="grid grid-cols-4 items-center gap-4">
+            <FormItem className="grid grid-cols-4 items-center gap-x-4">
               <FormLabel className="text-right">Título</FormLabel>
               <FormControl>
                 <Input {...field} className="col-span-3" />
               </FormControl>
-              <FormMessage className="col-span-4" />
+              <FormMessage className="col-span-3 col-start-2 text-xs ms-1 mt-1" />
             </FormItem>
           )}
         />
@@ -80,10 +86,10 @@ export default function EducationForm() {
           control={educationForm.control}
           name="graduationDate"
           render={({ field }) => (
-            <FormItem className="grid grid-cols-4 items-center gap-4">
+            <FormItem className="grid grid-cols-4 items-center gap-x-4">
               <FormLabel className="text-right">Fecha de graduación</FormLabel>
               <div className="col-span-3">
-                <Popover>
+                <Popover modal={true}>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button
@@ -115,7 +121,7 @@ export default function EducationForm() {
                   </PopoverContent>
                 </Popover>
               </div>
-              <FormMessage className="col-span-4" />
+              <FormMessage className="col-span-3 col-start-2 text-xs ms-1 mt-1" />
             </FormItem>
           )}
         />
