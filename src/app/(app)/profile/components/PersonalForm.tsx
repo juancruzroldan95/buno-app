@@ -6,10 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,13 +20,33 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-export default function PersonalForm() {
+import { updateLawyer } from "@/lib/lawyers-lib";
+import { SelectLawyer } from "@/db/schemas/lawyers-schema";
+import { Loader2 } from "lucide-react";
+
+interface PersonalFormProps {
+  initialData: SelectLawyer;
+}
+
+export default function PersonalForm({ initialData }: PersonalFormProps) {
   const profileFormSchema = z.object({
-    firstName: z.string().min(2, "Tu nombre debe tener al menos 2 caracteres"),
-    lastName: z.string().min(2, "Tu apellido debe tener al menos 2 caracteres"),
-    email: z.string().email("Email inválido"),
-    phone: z.string().min(10, "Número de teléfono inválido"),
-    bio: z.string().min(20, "La biografía debe tener al menos 20 caracteres"),
+    firstName: z
+      .string({ required_error: "Tu nombre es obligatorio" })
+      .min(2, "Tu nombre debe tener al menos 2 caracteres"),
+    lastName: z
+      .string({ required_error: "Tu apellido es obligatorio" })
+      .min(2, "Tu apellido debe tener al menos 2 caracteres"),
+    email: z
+      .string({ required_error: "El email es obligatorio" })
+      .email("Email inválido"),
+    phone: z
+      .string({ required_error: "El número de teléfono es obligatorio" })
+      .min(10, "Número de teléfono inválido"),
+    bio: z
+      .string()
+      .min(20, "La biografía debe tener al menos 20 caracteres")
+      .optional()
+      .or(z.literal("")),
     linkedinUrl: z
       .string()
       .url("URL de LinkedIn inválida")
@@ -36,19 +58,33 @@ export default function PersonalForm() {
   const profileForm = useForm<z.infer<typeof profileFormSchema>>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      firstName: "María",
-      lastName: "González",
-      email: "maria.gonzalez@example.com",
-      phone: "+54 11 1234-5678",
-      bio: "Experienced attorney specializing in corporate law and intellectual property. Over 8 years of experience working with technology companies and startups.",
-      linkedinUrl: "https://linkedin.com/in/mariagonzalez",
-      website: "https://mariagonzalez.law",
+      firstName: initialData.firstName || "",
+      lastName: initialData.lastName || "",
+      email: initialData.email || "",
+      phone: initialData.phone || "",
+      bio: initialData.bio || "",
+      linkedinUrl: initialData.linkedinUrl || "",
+      website: initialData.website || "",
     },
   });
 
   async function onProfileSubmit(data: z.infer<typeof profileFormSchema>) {
-    console.log(data);
-    // Here you would typically make an API call to update the profile
+    try {
+      await updateLawyer(initialData.lawyerId, data);
+      toast({
+        description: "Los cambios fueron guardados correctamente.",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "No se pudieron guardar los cambios",
+        variant: "destructive",
+      });
+    }
   }
 
   return (
@@ -158,7 +194,14 @@ export default function PersonalForm() {
           />
         </div>
 
-        <Button type="submit">Guardar Cambios</Button>
+        <Button type="submit" disabled={profileForm.formState.isSubmitting}>
+          {profileForm.formState.isSubmitting
+            ? "Guardando..."
+            : "Guardar Cambios"}
+          {profileForm.formState.isSubmitting && (
+            <Loader2 className="mr-1 animate-spin" />
+          )}
+        </Button>
       </form>
     </Form>
   );

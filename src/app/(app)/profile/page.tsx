@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { getLawyerById } from "@/lib/lawyers-lib";
 
 // Mock data
 const mockExperience = [
@@ -60,9 +61,12 @@ const mockEducation = [
   },
 ];
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const lawyerId = "3c3bb38c-89e2-479c-b10d-4e613a650e60";
+  const lawyerData = await getLawyerById(lawyerId);
+
   return (
-    <div className="w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Mi Perfil</h1>
         <p className="text-gray-500">
@@ -75,7 +79,8 @@ export default function ProfilePage() {
           <TabsList>
             <TabsTrigger value="personal">Información Personal</TabsTrigger>
             <TabsTrigger value="experience">
-              Experiencia profesional
+              <span className="hidden sm:inline">Experiencia profesional</span>
+              <span className="sm:hidden">Experiencia</span>
             </TabsTrigger>
             <TabsTrigger value="education">Educación</TabsTrigger>
           </TabsList>
@@ -96,7 +101,7 @@ export default function ProfilePage() {
                   </Avatar>
                 </div>
 
-                <PersonalForm />
+                <PersonalForm initialData={lawyerData} />
               </CardContent>
             </Card>
           </TabsContent>
