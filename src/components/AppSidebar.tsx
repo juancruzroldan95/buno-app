@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 // UI
 import {
@@ -89,6 +89,7 @@ const user = {
 
 export function AppSidebar() {
   const router = useRouter();
+  const pathname = usePathname();
 
   async function handleLogout() {
     try {
@@ -101,7 +102,7 @@ export function AppSidebar() {
   }
 
   return (
-    <Sidebar collapsible="icon" variant="sidebar">
+    <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader className="ml-1">
         <Image
           src="/buno-coffee-bar-transparent-2.png"
@@ -118,7 +119,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild isActive={pathname === item.url}>
                     <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
