@@ -7,6 +7,7 @@ export const lawyersTable = pgTable("lawyers_table", {
   lastName: text("last_name"),
   email: text("email").unique(),
   phone: text("phone"),
+  profilePicture: text("profile_picture"),
   bio: text("bio"),
   linkedinUrl: text("linkedin_url"),
   website: text("website"),

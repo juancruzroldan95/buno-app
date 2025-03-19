@@ -7,9 +7,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import PersonalForm from "./components/PersonalForm";
 import ExperienceForm from "./components/ExperienceForm";
 import EducationForm from "./components/EducationForm";
@@ -20,7 +19,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { getLawyerById } from "@/lib/lawyers-lib";
+
+import ProfileAvatar from "@/components/ProfileAvatar";
 
 // Mock data
 const mockExperience = [
@@ -94,11 +96,21 @@ export default async function ProfilePage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="mb-6">
-                  <Avatar className="h-24 w-24">
-                    <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&h=200&auto=format&fit=crop" />
-                    <AvatarFallback>MG</AvatarFallback>
-                  </Avatar>
+                <div className="mb-6 flex items-center">
+                  <ProfileAvatar
+                    profilePicture={lawyerData.profilePicture ?? ""}
+                    firstName={lawyerData.firstName ?? ""}
+                    lastName={lawyerData.lastName ?? ""}
+                    lawyerId={lawyerId}
+                  />
+
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold">Foto de perfil</h3>
+                    <p className="text-gray-500">
+                      Esta es tu foto de perfil. Hacé clic en la imagen para
+                      subir una nueva foto.
+                    </p>
+                  </div>
                 </div>
 
                 <PersonalForm initialData={lawyerData} />
