@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/utils/utils";
 
@@ -27,8 +27,21 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { DialogFooter } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
-export default function EducationForm() {
+import { createEducation } from "@/lib/educations-lib";
+
+interface EducationFormProps {
+  lawyerId: string;
+  setOpen: (open: boolean) => void;
+}
+
+export default function EducationForm({
+  lawyerId,
+  setOpen,
+}: EducationFormProps) {
+  const { toast } = useToast();
+
   const educationFormSchema = z.object({
     institution: z
       .string({ required_error: "Nombre de la institución es requerido" })
@@ -43,11 +56,31 @@ export default function EducationForm() {
 
   const educationForm = useForm<z.infer<typeof educationFormSchema>>({
     resolver: zodResolver(educationFormSchema),
+    defaultValues: {
+      institution: "",
+      field: "",
+      graduationDate: undefined,
+    },
   });
 
   async function onEducationSubmit(data: z.infer<typeof educationFormSchema>) {
-    console.log(data);
-    // Here you would typically make an API call to update the profile
+    try {
+      await createEducation({ ...data, lawyerId: lawyerId });
+      toast({
+        description: "Los cambios fueron guardados correctamente.",
+      });
+      setOpen(false);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "No se pudieron guardar los cambios",
+        variant: "destructive",
+      });
+    }
   }
 
   return (
@@ -126,7 +159,14 @@ export default function EducationForm() {
           )}
         />
         <DialogFooter className="mt-2">
-          <Button type="submit">Guardar Educación</Button>
+          <Button type="submit" disabled={educationForm.formState.isSubmitting}>
+            {educationForm.formState.isSubmitting
+              ? "Guardando..."
+              : "Guardar Educación"}
+            {educationForm.formState.isSubmitting && (
+              <Loader2 className="mr-1 animate-spin" />
+            )}
+          </Button>
         </DialogFooter>
       </form>
     </Form>

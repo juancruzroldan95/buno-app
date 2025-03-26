@@ -6,14 +6,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/utils/utils";
 
-import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -22,14 +22,27 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DialogFooter } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
-export default function ExperienceForm() {
+import { createWorkExperience } from "@/lib/work-experiences-lib";
+
+interface ExperienceFormProps {
+  lawyerId: string;
+  setOpen: (open: boolean) => void;
+}
+
+export default function ExperienceForm({
+  lawyerId,
+  setOpen,
+}: ExperienceFormProps) {
+  const { toast } = useToast();
+
   const experienceFormSchema = z.object({
     company: z
       .string({ required_error: "El nombre de la empresa es obligatorio" })
@@ -48,13 +61,35 @@ export default function ExperienceForm() {
 
   const experienceForm = useForm<z.infer<typeof experienceFormSchema>>({
     resolver: zodResolver(experienceFormSchema),
+    defaultValues: {
+      company: "",
+      position: "",
+      startDate: undefined,
+      endDate: undefined,
+      description: "",
+    },
   });
 
   async function onExperienceSubmit(
     data: z.infer<typeof experienceFormSchema>
   ) {
-    console.log(data);
-    // Here you would typically make an API call to update the profile
+    try {
+      await createWorkExperience({ ...data, lawyerId });
+      toast({
+        description: "Los cambios fueron guardados correctamente.",
+      });
+      setOpen(false);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "No se pudieron guardar los cambios",
+        variant: "destructive",
+      });
+    }
   }
 
   return (
@@ -189,7 +224,17 @@ export default function ExperienceForm() {
           )}
         />
         <DialogFooter className="mt-2">
-          <Button type="submit">Guardar Experiencia</Button>
+          <Button
+            type="submit"
+            disabled={experienceForm.formState.isSubmitting}
+          >
+            {experienceForm.formState.isSubmitting
+              ? "Guardando..."
+              : "Guardar Experiencia"}
+            {experienceForm.formState.isSubmitting && (
+              <Loader2 className="mr-1 animate-spin" />
+            )}
+          </Button>
         </DialogFooter>
       </form>
     </Form>

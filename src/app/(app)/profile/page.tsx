@@ -8,21 +8,13 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from "date-fns";
-import { Plus, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
+import ProfileAvatar from "@/components/ProfileAvatar";
 import PersonalForm from "./components/PersonalForm";
-import ExperienceForm from "./components/ExperienceForm";
-import EducationForm from "./components/EducationForm";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import ExperienceModal from "./components/ExperienceModal";
+import EducationModal from "./components/EducationModal";
 
 import { getLawyerById } from "@/lib/lawyers-lib";
-
-import ProfileAvatar from "@/components/ProfileAvatar";
 
 // Mock data
 const mockExperience = [
@@ -128,20 +120,7 @@ export default async function ProfilePage() {
                       Agregá o actualizá tu experiencia laboral
                     </CardDescription>
                   </div>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Agregar Experiencia
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader className="mb-2">
-                        <DialogTitle>Agregar Nueva Experiencia</DialogTitle>
-                      </DialogHeader>
-                      <ExperienceForm />
-                    </DialogContent>
-                  </Dialog>
+                  <ExperienceModal lawyerId={lawyerId} />
                 </div>
               </CardHeader>
               <CardContent>
@@ -185,20 +164,7 @@ export default async function ProfilePage() {
                       Agregá o actualizá tu educación
                     </CardDescription>
                   </div>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Agregar Educación
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader className="mb-2">
-                        <DialogTitle>Agregar Nueva Educación</DialogTitle>
-                      </DialogHeader>
-                      <EducationForm />
-                    </DialogContent>
-                  </Dialog>
+                  <EducationModal lawyerId={lawyerId} />
                 </div>
               </CardHeader>
               <CardContent>

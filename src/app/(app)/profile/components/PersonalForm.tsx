@@ -6,12 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { toast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,16 +19,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 
 import { updateLawyer } from "@/lib/lawyers-lib";
 import { SelectLawyer } from "@/db/schemas/lawyers-schema";
-import { Loader2 } from "lucide-react";
 
 interface PersonalFormProps {
   initialData: SelectLawyer;
 }
 
 export default function PersonalForm({ initialData }: PersonalFormProps) {
+  const { toast } = useToast();
+
   const profileFormSchema = z.object({
     firstName: z
       .string({ required_error: "Tu nombre es obligatorio" })
@@ -194,14 +196,16 @@ export default function PersonalForm({ initialData }: PersonalFormProps) {
           />
         </div>
 
-        <Button type="submit" disabled={profileForm.formState.isSubmitting}>
-          {profileForm.formState.isSubmitting
-            ? "Guardando..."
-            : "Guardar Cambios"}
-          {profileForm.formState.isSubmitting && (
-            <Loader2 className="mr-1 animate-spin" />
-          )}
-        </Button>
+        <div className="flex justify-end">
+          <Button type="submit" disabled={profileForm.formState.isSubmitting}>
+            {profileForm.formState.isSubmitting
+              ? "Guardando..."
+              : "Guardar Cambios"}
+            {profileForm.formState.isSubmitting && (
+              <Loader2 className="mr-1 animate-spin" />
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );
