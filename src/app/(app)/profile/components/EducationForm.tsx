@@ -29,7 +29,7 @@ import {
 import { DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 
-import { createEducation } from "@/lib/educations-lib";
+import { createEducation } from "@/lib/educations-actions";
 
 interface EducationFormProps {
   lawyerId: string;

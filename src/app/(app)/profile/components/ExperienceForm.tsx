@@ -30,15 +30,18 @@ import {
 } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
 
-import { createWorkExperience } from "@/lib/work-experiences-lib";
+import { createExperience, updateExperience } from "@/lib/experiences-actions";
+import { SelectExperience } from "@/db/schemas/experiences-schema";
 
 interface ExperienceFormProps {
-  lawyerId: string;
+  lawyerId?: string;
+  experience?: SelectExperience;
   setOpen: (open: boolean) => void;
 }
 
 export default function ExperienceForm({
   lawyerId,
+  experience,
   setOpen,
 }: ExperienceFormProps) {
   const { toast } = useToast();
@@ -62,11 +65,11 @@ export default function ExperienceForm({
   const experienceForm = useForm<z.infer<typeof experienceFormSchema>>({
     resolver: zodResolver(experienceFormSchema),
     defaultValues: {
-      company: "",
-      position: "",
-      startDate: undefined,
-      endDate: undefined,
-      description: "",
+      company: experience?.company || "",
+      position: experience?.position || "",
+      startDate: experience?.startDate || undefined,
+      endDate: experience?.endDate || undefined,
+      description: experience?.description || "",
     },
   });
 
@@ -74,7 +77,11 @@ export default function ExperienceForm({
     data: z.infer<typeof experienceFormSchema>
   ) {
     try {
-      await createWorkExperience({ ...data, lawyerId });
+      if (experience?.experienceId) {
+        await updateExperience(experience.experienceId, data);
+      } else {
+        await createExperience({ ...data, lawyerId: lawyerId! });
+      }
       toast({
         description: "Los cambios fueron guardados correctamente.",
       });
@@ -83,10 +90,7 @@ export default function ExperienceForm({
       console.error(error);
       toast({
         title: "Error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "No se pudieron guardar los cambios",
+        description: "No se pudieron guardar los cambios. Intente nuevamente.",
         variant: "destructive",
       });
     }
@@ -100,10 +104,10 @@ export default function ExperienceForm({
       >
         <FormField
           control={experienceForm.control}
-          name="company"
+          name="position"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Empresa</FormLabel>
+              <FormLabel>Posición</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -113,10 +117,10 @@ export default function ExperienceForm({
         />
         <FormField
           control={experienceForm.control}
-          name="position"
+          name="company"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Posición</FormLabel>
+              <FormLabel>Empresa</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>

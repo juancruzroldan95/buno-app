@@ -1,6 +1,6 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { db } from "../db";
 import {
   InsertEducation,
@@ -8,7 +8,21 @@ import {
   educationsSchema,
 } from "@/db/schemas/educations-schema";
 
-export async function getEducationById(id: SelectEducation["educationId"]) {
+async function getAllEducations(lawyerId: SelectEducation["lawyerId"]) {
+  const result = await db
+    .select()
+    .from(educationsSchema)
+    .where(
+      and(
+        eq(educationsSchema.lawyerId, lawyerId),
+        eq(educationsSchema.isDeleted, false)
+      )
+    );
+
+  return result;
+}
+
+async function getEducationById(id: SelectEducation["educationId"]) {
   const result = await db
     .select()
     .from(educationsSchema)
@@ -21,11 +35,11 @@ export async function getEducationById(id: SelectEducation["educationId"]) {
   return result[0];
 }
 
-export async function createEducation(data: InsertEducation) {
+async function createEducation(data: InsertEducation) {
   await db.insert(educationsSchema).values(data);
 }
 
-export async function updateEducation(
+async function updateEducation(
   id: SelectEducation["educationId"],
   data: Partial<Omit<SelectEducation, "educationId">>
 ) {
@@ -42,10 +56,18 @@ export async function updateEducation(
   return result[0];
 }
 
-export async function deleteEducation(id: SelectEducation["educationId"]) {
+async function deleteEducation(id: SelectEducation["educationId"]) {
   const data = { isDeleted: true };
   await db
     .update(educationsSchema)
     .set(data)
     .where(eq(educationsSchema.educationId, id));
 }
+
+export {
+  getAllEducations,
+  getEducationById,
+  createEducation,
+  updateEducation,
+  deleteEducation,
+};

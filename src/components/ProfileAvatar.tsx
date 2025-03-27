@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { uploadFile } from "@/firebase/storage";
-import { updateLawyer } from "@/lib/lawyers-lib";
+import { updateLawyer } from "@/lib/lawyers-actions";
 import { useToast } from "@/hooks/use-toast";
 
 interface ProfileAvatarProps {

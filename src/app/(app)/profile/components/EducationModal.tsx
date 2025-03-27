@@ -19,7 +19,7 @@ export default function EducationModal({ lawyerId }: { lawyerId: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="w-full md:w-auto md:ms-12">
           <Plus className="h-4 w-4 mr-2" />
           Agregar Educación
         </Button>

@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { createCase } from "@/lib/cases-lib";
+import { createCase } from "@/lib/cases-actions";
 import {
   Select,
   SelectContent,

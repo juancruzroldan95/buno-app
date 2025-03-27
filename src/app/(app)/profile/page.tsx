@@ -8,56 +8,24 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { format } from "date-fns";
-import { Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import ProfileAvatar from "@/components/ProfileAvatar";
 import PersonalForm from "./components/PersonalForm";
-import ExperienceModal from "./components/ExperienceModal";
+import ExperienceModal from "./components/CreateExperienceModal";
 import EducationModal from "./components/EducationModal";
 
-import { getLawyerById } from "@/lib/lawyers-lib";
-
-// Mock data
-const mockExperience = [
-  {
-    id: 1,
-    company: "Keital & Keital Asociados",
-    position: "Abogado Senior",
-    startDate: new Date("2020-01-01"),
-    endDate: new Date("2023-12-31"),
-    description:
-      "Lideré un equipo de abogados junior en la gestión de casos complejos de litigio corporativo. Gestioné las relaciones con los clientes y brindé asesoramiento legal estratégico a empresas Fortune 500.",
-  },
-  {
-    id: 2,
-    company: "Newtopia",
-    position: "Abogado Asociado",
-    startDate: new Date("2015-06-01"),
-    endDate: new Date("2019-12-31"),
-    description:
-      "Me especialicé en derecho de propiedad intelectual, gestionando solicitudes de patentes y disputas de marcas registradas. Trabajé estrechamente con startups tecnológicas y empresas consolidadas.",
-  },
-];
-
-const mockEducation = [
-  {
-    id: 1,
-    institution: "Facultad de Derecho de Harvard",
-    degree: "Juris Doctor",
-    field: "Derecho",
-    graduationDate: new Date("2015-05-15"),
-  },
-  {
-    id: 2,
-    institution: "Universidad de Pensilvania",
-    degree: "Licenciatura en Artes",
-    field: "Ciencias Políticas",
-    graduationDate: new Date("2012-05-15"),
-  },
-];
+import { getLawyerById } from "@/lib/lawyers-actions";
+import { getAllExperiences } from "@/lib/experiences-actions";
+import { getAllEducations } from "@/lib/educations-actions";
+import DeleteExperienceModal from "./components/DeleteExperienceModal";
+import UpdateExperienceModal from "./components/UpdateExperienceModal";
 
 export default async function ProfilePage() {
   const lawyerId = "3c3bb38c-89e2-479c-b10d-4e613a650e60";
   const lawyerData = await getLawyerById(lawyerId);
+
+  const experiences = await getAllExperiences(lawyerId);
+  const educations = await getAllEducations(lawyerId);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -113,29 +81,34 @@ export default async function ProfilePage() {
           <TabsContent value="experience">
             <Card>
               <CardHeader>
-                <div className="flex justify-between items-center">
+                <div className="md:flex md:items-center md:justify-between">
                   <div>
                     <CardTitle>Experiencia Profesional</CardTitle>
                     <CardDescription>
                       Agregá o actualizá tu experiencia laboral
                     </CardDescription>
                   </div>
-                  <ExperienceModal lawyerId={lawyerId} />
+                  <div className="text-center md:text-right mt-4 md:mt-0">
+                    <ExperienceModal lawyerId={lawyerId} />
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  {mockExperience.map((exp) => (
-                    <Card key={exp.id}>
+                  {experiences.map((exp) => (
+                    <Card key={exp.experienceId}>
                       <CardHeader>
                         <div className="flex justify-between items-start">
                           <div>
                             <CardTitle>{exp.position}</CardTitle>
                             <CardDescription>{exp.company}</CardDescription>
                           </div>
-                          <Button variant="ghost" size="icon">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <div>
+                            <UpdateExperienceModal experience={exp} />
+                            <DeleteExperienceModal
+                              experienceId={exp.experienceId}
+                            />
+                          </div>
                         </div>
                       </CardHeader>
                       <CardContent>
@@ -143,7 +116,7 @@ export default async function ProfilePage() {
                           {format(exp.startDate, "MMM yyyy")} -{" "}
                           {exp.endDate
                             ? format(exp.endDate, "MMM yyyy")
-                            : "Present"}
+                            : "Actualidad"}
                         </p>
                         <p className="text-sm">{exp.description}</p>
                       </CardContent>
@@ -157,29 +130,37 @@ export default async function ProfilePage() {
           <TabsContent value="education">
             <Card>
               <CardHeader>
-                <div className="flex justify-between items-center">
+                <div className="md:flex md:items-center md:justify-between">
                   <div>
                     <CardTitle>Educación</CardTitle>
                     <CardDescription>
-                      Agregá o actualizá tu educación
+                      Compartí tu trayectoria académica y fortalecé tu perfil
+                      profesional
                     </CardDescription>
                   </div>
-                  <EducationModal lawyerId={lawyerId} />
+                  <div className="text-center md:text-right mt-4 md:mt-0">
+                    <EducationModal lawyerId={lawyerId} />
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  {mockEducation.map((edu) => (
-                    <Card key={edu.id}>
+                  {educations.map((edu) => (
+                    <Card key={edu.educationId}>
                       <CardHeader>
                         <div className="flex justify-between items-start">
                           <div>
-                            <CardTitle>{edu.degree}</CardTitle>
+                            <CardTitle>{edu.field}</CardTitle>
                             <CardDescription>{edu.institution}</CardDescription>
                           </div>
-                          <Button variant="ghost" size="icon">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                          <div>
+                            <Button variant="ghost" size="icon">
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </CardHeader>
                       <CardContent>

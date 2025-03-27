@@ -1,6 +1,6 @@
 "use server";
 
-import { createUser } from "@/lib/users-lib";
+import { createUser } from "@/lib/users-actions";
 import { auth, provider } from "./config";
 import {
   createUserWithEmailAndPassword,

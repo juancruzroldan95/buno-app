@@ -1,8 +1,8 @@
 import { date, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { timestamps } from "./columns-helpers";
 
-export const workExperiencesSchema = pgTable("work_experiences_table", {
-  workExperienceId: uuid("work_experience_id").defaultRandom().primaryKey(),
+export const experiencesSchema = pgTable("experiences_table", {
+  experienceId: uuid("experience_id").defaultRandom().primaryKey(),
   company: text("company").notNull(),
   position: text("position").notNull(),
   startDate: date("start_date", { mode: "date" }).notNull(),
@@ -12,5 +12,5 @@ export const workExperiencesSchema = pgTable("work_experiences_table", {
   ...timestamps,
 });
 
-export type InsertWorkExperience = typeof workExperiencesSchema.$inferInsert;
-export type SelectWorkExperience = typeof workExperiencesSchema.$inferSelect;
+export type InsertExperience = typeof experiencesSchema.$inferInsert;
+export type SelectExperience = typeof experiencesSchema.$inferSelect;
