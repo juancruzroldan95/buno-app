@@ -4,7 +4,6 @@ import React, { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { deleteExperience } from "@/lib/experiences-actions";
 import {
   Dialog,
   DialogContent,
@@ -15,23 +14,24 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
+import { deleteEducation } from "@/lib/educations-actions";
 
-export default function DeleteExperienceModal({
-  experienceId,
+export default function DeleteEducationModal({
+  educationId,
 }: {
-  experienceId: string;
+  educationId: string;
 }) {
   const [open, setOpen] = useState(false);
 
   async function handleDelete() {
     try {
-      await deleteExperience(experienceId);
+      await deleteEducation(educationId);
       setOpen(false);
     } catch (error) {
-      console.error("Error deleting experience:", error);
+      console.error("Error deleting education:", error);
       toast({
         title: "Error",
-        description: "No se pudo eliminar la experiencia",
+        description: "No se pudo eliminar la educación",
         variant: "destructive",
       });
     }
@@ -46,9 +46,9 @@ export default function DeleteExperienceModal({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Eliminar Experiencia</DialogTitle>
+          <DialogTitle>Eliminar Educación</DialogTitle>
           <DialogDescription>
-            ¿Estás seguro de eliminar esta experiencia?
+            ¿Estás seguro de eliminar esta educación?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

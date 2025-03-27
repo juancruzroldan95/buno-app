@@ -29,15 +29,18 @@ import {
 import { DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 
-import { createEducation } from "@/lib/educations-actions";
+import { createEducation, updateEducation } from "@/lib/educations-actions";
+import { SelectEducation } from "@/db/schemas/educations-schema";
 
 interface EducationFormProps {
-  lawyerId: string;
+  lawyerId?: string;
+  education?: SelectEducation;
   setOpen: (open: boolean) => void;
 }
 
 export default function EducationForm({
   lawyerId,
+  education,
   setOpen,
 }: EducationFormProps) {
   const { toast } = useToast();
@@ -57,15 +60,19 @@ export default function EducationForm({
   const educationForm = useForm<z.infer<typeof educationFormSchema>>({
     resolver: zodResolver(educationFormSchema),
     defaultValues: {
-      institution: "",
-      field: "",
-      graduationDate: undefined,
+      institution: education?.institution || "",
+      field: education?.field || "",
+      graduationDate: education?.graduationDate || undefined,
     },
   });
 
   async function onEducationSubmit(data: z.infer<typeof educationFormSchema>) {
     try {
-      await createEducation({ ...data, lawyerId: lawyerId });
+      if (education?.educationId) {
+        await updateEducation(education.educationId, data);
+      } else {
+        await createEducation({ ...data, lawyerId: lawyerId! });
+      }
       toast({
         description: "Los cambios fueron guardados correctamente.",
       });
@@ -74,10 +81,7 @@ export default function EducationForm({
       console.error(error);
       toast({
         title: "Error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "No se pudieron guardar los cambios",
+        description: "No se pudieron guardar los cambios",
         variant: "destructive",
       });
     }

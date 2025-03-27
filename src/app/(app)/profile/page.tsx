@@ -1,4 +1,6 @@
-import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+
 import {
   Card,
   CardContent,
@@ -7,18 +9,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { format } from "date-fns";
-import { Pencil, Trash2 } from "lucide-react";
 import ProfileAvatar from "@/components/ProfileAvatar";
-import PersonalForm from "./components/PersonalForm";
-import ExperienceModal from "./components/CreateExperienceModal";
-import EducationModal from "./components/EducationModal";
 
 import { getLawyerById } from "@/lib/lawyers-actions";
 import { getAllExperiences } from "@/lib/experiences-actions";
 import { getAllEducations } from "@/lib/educations-actions";
-import DeleteExperienceModal from "./components/DeleteExperienceModal";
+
+import PersonalForm from "./components/PersonalForm";
+import CreateExperienceModal from "./components/CreateExperienceModal";
 import UpdateExperienceModal from "./components/UpdateExperienceModal";
+import DeleteExperienceModal from "./components/DeleteExperienceModal";
+import CreateEducationModal from "./components/CreateEducationModal";
+import UpdateEducationModal from "./components/UpdateEducationModal";
+import DeleteEducationModal from "./components/DeleteEducationModal";
 
 export default async function ProfilePage() {
   const lawyerId = "3c3bb38c-89e2-479c-b10d-4e613a650e60";
@@ -89,7 +92,7 @@ export default async function ProfilePage() {
                     </CardDescription>
                   </div>
                   <div className="text-center md:text-right mt-4 md:mt-0">
-                    <ExperienceModal lawyerId={lawyerId} />
+                    <CreateExperienceModal lawyerId={lawyerId} />
                   </div>
                 </div>
               </CardHeader>
@@ -113,9 +116,14 @@ export default async function ProfilePage() {
                       </CardHeader>
                       <CardContent>
                         <p className="text-sm text-muted-foreground mb-2">
-                          {format(exp.startDate, "MMM yyyy")} -{" "}
+                          {format(exp.startDate, "MMM yyyy", {
+                            locale: es,
+                          })}{" "}
+                          -{" "}
                           {exp.endDate
-                            ? format(exp.endDate, "MMM yyyy")
+                            ? format(exp.endDate, "MMM yyyy", {
+                                locale: es,
+                              })
                             : "Actualidad"}
                         </p>
                         <p className="text-sm">{exp.description}</p>
@@ -139,7 +147,7 @@ export default async function ProfilePage() {
                     </CardDescription>
                   </div>
                   <div className="text-center md:text-right mt-4 md:mt-0">
-                    <EducationModal lawyerId={lawyerId} />
+                    <CreateEducationModal lawyerId={lawyerId} />
                   </div>
                 </div>
               </CardHeader>
@@ -154,19 +162,19 @@ export default async function ProfilePage() {
                             <CardDescription>{edu.institution}</CardDescription>
                           </div>
                           <div>
-                            <Button variant="ghost" size="icon">
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon">
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
+                            <UpdateEducationModal education={edu} />
+                            <DeleteEducationModal
+                              educationId={edu.educationId}
+                            />
                           </div>
                         </div>
                       </CardHeader>
                       <CardContent>
                         <p className="text-sm text-muted-foreground">
-                          {edu.field} • Graduated{" "}
-                          {format(edu.graduationDate, "MMMM yyyy")}
+                          Fecha de graduación:{" "}
+                          {format(edu.graduationDate, "MMMM yyyy", {
+                            locale: es,
+                          })}
                         </p>
                       </CardContent>
                     </Card>
