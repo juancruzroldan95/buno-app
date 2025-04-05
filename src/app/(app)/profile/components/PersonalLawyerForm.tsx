@@ -24,11 +24,13 @@ import { useToast } from "@/hooks/use-toast";
 import { updateLawyer } from "@/lib/lawyers-actions";
 import { SelectLawyer } from "@/db/schemas/lawyers-schema";
 
-interface PersonalFormProps {
+interface PersonalLawyerFormProps {
   initialData: SelectLawyer;
 }
 
-export default function PersonalForm({ initialData }: PersonalFormProps) {
+export default function PersonalLawyerForm({
+  initialData,
+}: PersonalLawyerFormProps) {
   const { toast } = useToast();
 
   const profileFormSchema = z.object({

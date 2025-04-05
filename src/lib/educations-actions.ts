@@ -7,6 +7,7 @@ import {
   SelectEducation,
   educationsSchema,
 } from "@/db/schemas/educations-schema";
+import { revalidatePath } from "next/cache";
 
 async function getAllEducations(lawyerId: SelectEducation["lawyerId"]) {
   const result = await db
@@ -26,7 +27,12 @@ async function getEducationById(id: SelectEducation["educationId"]) {
   const result = await db
     .select()
     .from(educationsSchema)
-    .where(eq(educationsSchema.educationId, id));
+    .where(
+      and(
+        eq(educationsSchema.educationId, id),
+        eq(educationsSchema.isDeleted, false)
+      )
+    );
 
   if (result.length === 0) {
     throw new Error(`No se encontró ninguna educación con el ID: ${id}`);
@@ -36,7 +42,10 @@ async function getEducationById(id: SelectEducation["educationId"]) {
 }
 
 async function createEducation(data: InsertEducation) {
-  await db.insert(educationsSchema).values(data);
+  const result = await db.insert(educationsSchema).values(data);
+
+  revalidatePath("/profile");
+  return result;
 }
 
 async function updateEducation(
@@ -53,15 +62,24 @@ async function updateEducation(
     throw new Error(`No se encontró ninguna educación con el ID: ${id}`);
   }
 
+  revalidatePath("/profile");
   return result[0];
 }
 
 async function deleteEducation(id: SelectEducation["educationId"]) {
-  const data = { isDeleted: true };
-  await db
+  const data = { isDeleted: true, deletedAt: new Date() };
+  const result = await db
     .update(educationsSchema)
     .set(data)
-    .where(eq(educationsSchema.educationId, id));
+    .where(eq(educationsSchema.educationId, id))
+    .returning();
+
+  if (result.length === 0) {
+    throw new Error(`No se encontró ninguna educación con el ID: ${id}`);
+  }
+
+  revalidatePath("/profile");
+  return result[0];
 }
 
 export {

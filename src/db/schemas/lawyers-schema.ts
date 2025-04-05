@@ -1,5 +1,6 @@
 import { pgTable, real, text, uuid } from "drizzle-orm/pg-core";
 import { timestamps } from "./columns-helpers";
+import { genderEnum } from "./enums";
 
 export const lawyersTable = pgTable("lawyers_table", {
   lawyerId: uuid("lawyer_id").defaultRandom().primaryKey(),
@@ -8,6 +9,7 @@ export const lawyersTable = pgTable("lawyers_table", {
   email: text("email").unique(),
   phone: text("phone"),
   profilePicture: text("profile_picture"),
+  gender: genderEnum("gender"),
   bio: text("bio"),
   linkedinUrl: text("linkedin_url"),
   website: text("website"),

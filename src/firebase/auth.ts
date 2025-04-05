@@ -37,13 +37,7 @@ export async function register({
     password
   );
   const filteredUser = userDTO(userCredential.user);
-  await createUser({
-    uid: userCredential.user.uid,
-    firstName,
-    lastName,
-    email,
-    accountType,
-  });
+  await createUser(); // To do;
 
   console.log(userCredential.user);
 

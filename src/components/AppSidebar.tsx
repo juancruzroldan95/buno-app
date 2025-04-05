@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 
-// UI
 import {
   Sidebar,
   SidebarContent,
@@ -32,6 +31,7 @@ import {
   ChevronUp,
   Home,
   Inbox,
+  ScrollText,
   Search,
   Settings,
   User2,
@@ -43,24 +43,23 @@ import {
   LogOut,
 } from "lucide-react";
 
-// Lib
 import { logout } from "@/firebase/auth";
 
 // Menu items.
-const items = [
+const lawyerItems = [
   {
     title: "Inicio",
-    url: "/dashboard",
+    url: "/home",
     icon: Home,
   },
   {
     title: "Buscar casos",
-    url: "/cases",
+    url: "/search-cases",
     icon: Search,
   },
   {
     title: "Mis casos",
-    url: "#",
+    url: "/my-cases",
     icon: Inbox,
   },
   {
@@ -80,10 +79,30 @@ const items = [
   // },
 ];
 
+const clientItems = [
+  {
+    title: "Inicio",
+    url: "/home",
+    icon: Home,
+  },
+  {
+    title: "Tus casos",
+    url: "/your-cases",
+    icon: ScrollText,
+  },
+  {
+    title: "Mi perfil",
+    url: "/profile",
+    icon: UserPen,
+  },
+];
+
 // Logged user
-const user = {
-  name: "shadcn",
+const loggedUser = {
+  id: "4f40a187-4539-435a-92a4-0f13aea10cc3",
+  username: "shadcn",
   email: "m@example.com",
+  role: 1,
   avatar: "/avatars/shadcn.jpg",
 };
 
@@ -117,16 +136,18 @@ export function AppSidebar() {
           <SidebarGroupLabel>Plataforma</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={pathname === item.url}>
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {(loggedUser.role === 1 ? lawyerItems : clientItems).map(
+                (item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild isActive={pathname === item.url}>
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -139,12 +160,17 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton size="lg">
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={user.avatar} alt={user.name} />
+                    <AvatarImage
+                      src={loggedUser.avatar}
+                      alt={loggedUser.username}
+                    />
                     <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{user.name}</span>
-                    <span className="truncate text-xs">{user.email}</span>
+                    <span className="truncate font-semibold">
+                      {loggedUser.username}
+                    </span>
+                    <span className="truncate text-xs">{loggedUser.email}</span>
                   </div>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>

@@ -5,12 +5,14 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { uploadFile } from "@/firebase/storage";
 import { updateLawyer } from "@/lib/lawyers-actions";
 import { useToast } from "@/hooks/use-toast";
+import { updateClient } from "@/lib/clients-actions";
 
 interface ProfileAvatarProps {
   profilePicture?: string;
   firstName?: string;
   lastName?: string;
-  lawyerId: string;
+  lawyerId?: string;
+  clientId?: string;
 }
 
 export default function ProfileAvatar({
@@ -18,6 +20,7 @@ export default function ProfileAvatar({
   firstName,
   lastName,
   lawyerId,
+  clientId,
 }: ProfileAvatarProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarUrl, setAvatarUrl] = useState(profilePicture ?? "");
@@ -34,9 +37,15 @@ export default function ProfileAvatar({
     try {
       const url = await uploadFile(file);
       setAvatarUrl(url);
-      await updateLawyer(lawyerId, {
-        profilePicture: url,
-      });
+      if (lawyerId) {
+        await updateLawyer(lawyerId, {
+          profilePicture: url,
+        });
+      } else if (clientId) {
+        await updateClient(clientId, {
+          profilePicture: url,
+        });
+      }
       toast({
         description: "La foto se guardó correctamente.",
       });

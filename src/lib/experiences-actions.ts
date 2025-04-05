@@ -79,8 +79,14 @@ async function deleteExperience(id: SelectExperience["experienceId"]) {
     .where(eq(experiencesSchema.experienceId, id))
     .returning();
 
+  if (result.length === 0) {
+    throw new Error(
+      `No se encontró ninguna experiencia laboral con el ID: ${id}`
+    );
+  }
+
   revalidatePath("/profile");
-  return result;
+  return result[0];
 }
 
 export {
