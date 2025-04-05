@@ -1,8 +1,12 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
+import { signOut, onAuthStateChanged } from "@/firebase/auth";
 import { useRouter, usePathname } from "next/navigation";
+import { firebaseConfig } from "@/firebase/config";
 
 import {
   Sidebar,
@@ -42,8 +46,6 @@ import {
   Bell,
   LogOut,
 } from "lucide-react";
-
-import { logout } from "@/firebase/auth";
 
 // Menu items.
 const lawyerItems = [
@@ -102,23 +104,65 @@ const loggedUser = {
   id: "4f40a187-4539-435a-92a4-0f13aea10cc3",
   username: "shadcn",
   email: "m@example.com",
-  role: 1,
+  role: 2,
   avatar: "/avatars/shadcn.jpg",
 };
 
-export function AppSidebar() {
+function useUserSession(initialUser: any) {
+  // The initialUser comes from the server via a server component
+  const [user, setUser] = useState(initialUser);
+  const router = useRouter();
+
+  // Register the service worker that sends auth state back to server
+  // The service worker is built with npm run build-service-worker
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      const serializedFirebaseConfig = encodeURIComponent(
+        JSON.stringify(firebaseConfig)
+      );
+      const serviceWorkerUrl = `/auth-service-worker.js?firebaseConfig=${serializedFirebaseConfig}`;
+
+      navigator.serviceWorker
+        .register(serviceWorkerUrl)
+        .then((registration) => console.log("scope is: ", registration.scope));
+    }
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged((authUser: any) => {
+      setUser(authUser);
+    });
+
+    return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    onAuthStateChanged((authUser: any) => {
+      if (user === undefined) return;
+
+      // refresh when user changed to ease testing
+      if (user?.email !== authUser?.email) {
+        router.refresh();
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  return user;
+}
+
+export function AppSidebar({ initialUser }: { initialUser: any }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  async function handleLogout() {
-    try {
-      const response = await logout();
-      console.log(response);
-      router.push("/");
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const user = useUserSession(initialUser);
+  console.log(user);
+
+  const handleSignOut = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    signOut();
+  };
 
   return (
     <Sidebar variant="floating" collapsible="icon">
@@ -194,7 +238,7 @@ export function AppSidebar() {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
+                <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="w-4 h-4 mr-1.5" />
                   Cerrar sesión
                 </DropdownMenuItem>

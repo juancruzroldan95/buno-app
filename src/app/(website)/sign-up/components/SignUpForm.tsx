@@ -2,13 +2,12 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signInWithGoogle } from "@/firebase/auth";
 
-// Form
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-// UI
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,9 +27,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Scale, User } from "lucide-react";
-
-// Lib
-import { register } from "@/firebase/auth";
 
 const formSchema = z.object({
   firstName: z
@@ -59,16 +55,16 @@ export default function SignUpForm() {
       lastName: "",
       email: "",
       password: "",
-      accountType: "",
+      accountType: undefined,
     },
   });
 
   async function handleSignUp(values: z.infer<typeof formSchema>) {
     try {
       setIsSignUpLoading(true);
-      const { authToken, user } = await register(values);
-      console.log(authToken);
-      console.log(user);
+      // const { authToken, user } = await register(values);
+      // console.log(authToken);
+      // console.log(user);
       return;
       router.push("/dashboard");
     } catch (error) {
@@ -78,6 +74,11 @@ export default function SignUpForm() {
     }
   }
 
+  const handleGoogleSignIn = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    signInWithGoogle();
+  };
+
   return (
     <Card>
       <CardContent className="pt-6">
@@ -86,7 +87,7 @@ export default function SignUpForm() {
             <Button
               variant="outline"
               className="w-full"
-              onClick={() => console.log("Google login")}
+              onClick={handleGoogleSignIn}
             >
               <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                 <path

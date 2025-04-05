@@ -4,12 +4,10 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-// Form
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-// UI
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -22,9 +20,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-
-// Lib
-import { firebaseLogin } from "@/firebase/auth";
 
 const formSchema = z.object({
   email: z.string().email("Por favor ingresá un email válido"),
@@ -51,13 +46,13 @@ export default function LoginPage() {
     try {
       setIsLoginLoading(true);
       setErrorMessage("");
-      const response = await firebaseLogin(values);
-      console.log(response);
+      // const response = await firebaseLogin(values);
+      // console.log(response);
       return;
       router.push("/dashboard");
     } catch (error) {
       console.error(error);
-      setErrorMessage(error.message);
+      // setErrorMessage(error.message);
     } finally {
       setIsLoginLoading(false);
     }
@@ -72,7 +67,7 @@ export default function LoginPage() {
       router.push("/dashboard");
     } catch (error) {
       console.error(error);
-      setErrorMessage(error.message);
+      // setErrorMessage(error.message);
     } finally {
       setIsGoogleLoginLoading(false);
     }
