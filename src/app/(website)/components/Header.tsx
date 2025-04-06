@@ -4,21 +4,19 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-// Components
 import HamburgerBtn from "./HamburgerBtn";
-import { CreateCaseModal } from "./CreateCaseModal";
+import { CreateCaseModal } from "@/components/CreateCaseModal";
 import MobileMenu from "./MobileMenu";
 
-// UI
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
-} from "./ui/navigation-menu";
-import { Dialog, DialogTrigger } from "./ui/dialog";
-import { Button } from "./ui/button";
+} from "@/components/ui/navigation-menu";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

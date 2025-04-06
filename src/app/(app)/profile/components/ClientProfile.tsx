@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import ProfileAvatar from "@/components/ProfileAvatar";
+import ProfileAvatar from "@/app/(app)/components/ProfileAvatar";
 
 import { getClientById } from "@/lib/clients-actions";
 

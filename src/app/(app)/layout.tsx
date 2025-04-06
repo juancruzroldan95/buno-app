@@ -1,5 +1,5 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
+import { AppSidebar } from "./components/AppSidebar";
 import { Toaster } from "@/components/ui/toaster";
 import { getAuthenticatedAppForUser } from "@/firebase/serverApp";
 

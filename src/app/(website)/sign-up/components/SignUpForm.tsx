@@ -74,9 +74,14 @@ export default function SignUpForm() {
     }
   }
 
-  const handleGoogleSignIn = (event: { preventDefault: () => void }) => {
+  const handleGoogleSignIn = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    signInWithGoogle();
+    try {
+      await signInWithGoogle();
+      router.push("/home");
+    } catch (error) {
+      console.error("Error signing in with Google", error);
+    }
   };
 
   return (

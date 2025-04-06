@@ -156,12 +156,17 @@ export function AppSidebar({ initialUser }: { initialUser: any }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const user = useUserSession(initialUser);
-  console.log(user);
+  const firebaseUser = useUserSession(initialUser);
+  console.log(firebaseUser);
 
-  const handleSignOut = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-    signOut();
+  const handleSignOut = async (event: { preventDefault: () => void }) => {
+    try {
+      event.preventDefault();
+      await signOut();
+      router.push("/");
+    } catch (error) {
+      console.error("Error signing out", error);
+    }
   };
 
   return (

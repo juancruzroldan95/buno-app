@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ProfileAvatar from "@/components/ProfileAvatar";
+import ProfileAvatar from "@/app/(app)/components/ProfileAvatar";
 
 import { getLawyerById } from "@/lib/lawyers-actions";
 import { getAllExperiences } from "@/lib/experiences-actions";
