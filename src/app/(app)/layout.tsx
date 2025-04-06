@@ -9,6 +9,7 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const { currentUser } = await getAuthenticatedAppForUser();
+
   return (
     <SidebarProvider>
       <AppSidebar initialUser={currentUser?.toJSON()} />

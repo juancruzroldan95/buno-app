@@ -27,8 +27,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "auth-service-worker.js",
-    "src/firebase/config.js"
+    "auth-service-worker.js"
   ],
   "exclude": ["node_modules"]
 }
