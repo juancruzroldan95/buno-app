@@ -13,7 +13,7 @@ export default async function AppLayout({
   return (
     <SidebarProvider>
       <AppSidebar initialUser={currentUser?.toJSON()} />
-      <main>
+      <main className="w-full">
         <SidebarTrigger />
         {children}
       </main>

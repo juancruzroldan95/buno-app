@@ -14,12 +14,12 @@ import { getClientById } from "@/lib/clients-actions";
 
 import PersonalClientForm from "./PersonalClientForm";
 
-export default async function ClientProfile() {
+export default async function ClientProfilePage() {
   const clientId = "3c3bb38c-89e2-479c-b10d-4e613a650e61";
   const clientData = await getClientById(clientId);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-6 py-12 lg:px-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Mi Perfil</h1>
         <p className="text-gray-500">
