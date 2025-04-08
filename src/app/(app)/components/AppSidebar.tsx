@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { signOut, onAuthStateChanged } from "@/firebase/auth";
 import { useRouter, usePathname } from "next/navigation";
-import { firebaseConfig } from "@/firebase/config";
+import { signOut, onIdTokenChanged } from "@/firebase/auth";
+import { setCookie, deleteCookie } from "cookies-next";
 
 import {
   Sidebar,
@@ -109,55 +108,29 @@ const loggedUser = {
 };
 
 function useUserSession(initialUser: any) {
-  // The initialUser comes from the server via a server component
-  const [user, setUser] = useState(initialUser);
-  const router = useRouter();
-
-  // Register the service worker that sends auth state back to server
-  // The service worker is built with npm run build-service-worker
   useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      const serializedFirebaseConfig = encodeURIComponent(
-        JSON.stringify(firebaseConfig)
-      );
-      const serviceWorkerUrl = `/auth-service-worker.js?firebaseConfig=${serializedFirebaseConfig}`;
-
-      navigator.serviceWorker
-        .register(serviceWorkerUrl)
-        .then((registration) => console.log("scope is: ", registration.scope));
-    }
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged((authUser: any) => {
-      setUser(authUser);
-    });
-
-    return () => unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    onAuthStateChanged((authUser: any) => {
-      if (user === undefined) return;
-
-      // refresh when user changed to ease testing
-      if (user?.email !== authUser?.email) {
-        router.refresh();
+    return onIdTokenChanged(async (user) => {
+      if (user) {
+        const idToken = await user.getIdToken();
+        await setCookie("__session", idToken);
+      } else {
+        await deleteCookie("__session");
       }
+      if (initialUser?.uid === user?.uid) {
+        return;
+      }
+      window.location.reload();
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [initialUser]);
 
-  return user;
+  return initialUser;
 }
 
-export function AppSidebar({ initialUser }: { initialUser: any }) {
+export default function AppSidebar({ initialUser }: { initialUser: any }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const firebaseUser = useUserSession(initialUser);
-  console.log(firebaseUser);
+  const user = useUserSession(initialUser);
 
   const handleSignOut = async (event: { preventDefault: () => void }) => {
     try {
