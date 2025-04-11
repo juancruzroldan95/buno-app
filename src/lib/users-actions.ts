@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
 import { InsertUser, SelectUser, usersTable } from "@/db/schemas/users-schema";
@@ -36,6 +37,7 @@ async function updateUser(
     throw new Error(`No se encontró ningún usuario con el ID: ${uid}`);
   }
 
+  revalidatePath("/profile");
   return result[0];
 }
 
