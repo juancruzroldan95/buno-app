@@ -1,11 +1,12 @@
-import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { integer, pgTable, text } from "drizzle-orm/pg-core";
 import { timestamps } from "./columns-helpers";
 
 export const usersTable = pgTable("users_table", {
-  userId: uuid("user_id").defaultRandom().primaryKey(),
-  username: text("username"),
-  email: text("email").notNull().unique(),
-  roleId: integer("role_id").notNull(),
+  uid: text("uid").primaryKey().notNull(),
+  email: text("email").unique(),
+  displayName: text("display_name"),
+  photoURL: text("photo_url"),
+  roleId: integer("role_id"),
   ...timestamps,
 });
 

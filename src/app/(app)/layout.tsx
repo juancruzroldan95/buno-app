@@ -1,7 +1,10 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import AppSidebar from "./components/AppSidebar";
-import { Toaster } from "@/components/ui/toaster";
+import { redirect } from "next/navigation";
 import { getAuthenticatedAppForUser } from "@/firebase/serverApp";
+import { getUserByUid } from "@/lib/users-actions";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
+import AppSidebar from "./components/AppSidebar";
+
 // Force next.js to treat this route as server-side rendered
 // Without this line, during the build process, next.js will treat this route as static and build a static HTML file for it
 export const dynamic = "force-dynamic";
@@ -13,9 +16,15 @@ export default async function AppLayout({
 }) {
   const { currentUser } = await getAuthenticatedAppForUser();
 
+  if (!currentUser) {
+    redirect("/");
+  }
+
+  const dbUser = await getUserByUid(currentUser?.uid as string);
+
   return (
     <SidebarProvider>
-      <AppSidebar initialUser={currentUser?.toJSON()} />
+      <AppSidebar initialUser={dbUser} />
 
       <main className="w-full">
         <SidebarTrigger />

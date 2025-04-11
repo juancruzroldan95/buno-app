@@ -1,6 +1,5 @@
 import { pgEnum } from "drizzle-orm/pg-core";
 
-// Gender Enum
 export const genderEnum = pgEnum("gender", [
   "male",
   "female",
@@ -8,10 +7,8 @@ export const genderEnum = pgEnum("gender", [
   "other",
 ]);
 
-// Role Enum (if you choose to move roles to the DB later)
 export const roleEnum = pgEnum("role", ["client", "lawyer"]);
 
-// Case Status Enum
 export const caseStatusEnum = pgEnum("case_status", [
   "open",
   "in_progress",
@@ -19,7 +16,6 @@ export const caseStatusEnum = pgEnum("case_status", [
   "cancelled",
 ]);
 
-// Proposal Status Enum
 export const proposalStatusEnum = pgEnum("proposal_status", [
   "pending",
   "accepted",

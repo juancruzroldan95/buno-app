@@ -1,14 +1,30 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { db } from "../db";
 import {
   InsertLawyer,
   SelectLawyer,
   lawyersTable,
 } from "@/db/schemas/lawyers-schema";
+import { SelectUser } from "@/db/schemas/users-schema";
+import { db } from "../db";
 
-export async function getLawyerById(id: SelectLawyer["lawyerId"]) {
+async function getLawyerByUserId(userId: SelectUser["uid"]) {
+  const result = await db
+    .select()
+    .from(lawyersTable)
+    .where(eq(lawyersTable.uid, userId));
+
+  if (result.length === 0) {
+    throw new Error(
+      `No se encontró ningún abogado asociado al usuario con el ID: ${userId}`
+    );
+  }
+
+  return result[0];
+}
+
+async function getLawyerById(id: SelectLawyer["lawyerId"]) {
   const result = await db
     .select()
     .from(lawyersTable)
@@ -21,11 +37,11 @@ export async function getLawyerById(id: SelectLawyer["lawyerId"]) {
   return result[0];
 }
 
-export async function createLawyer(data: InsertLawyer) {
+async function createLawyer(data: InsertLawyer) {
   await db.insert(lawyersTable).values(data);
 }
 
-export async function updateLawyer(
+async function updateLawyer(
   id: SelectLawyer["lawyerId"],
   data: Partial<Omit<SelectLawyer, "lawyerId">>
 ) {
@@ -42,7 +58,15 @@ export async function updateLawyer(
   return result[0];
 }
 
-export async function deleteLawyer(id: SelectLawyer["lawyerId"]) {
+async function deleteLawyer(id: SelectLawyer["lawyerId"]) {
   const data = { isDeleted: true };
   await db.update(lawyersTable).set(data).where(eq(lawyersTable.lawyerId, id));
 }
+
+export {
+  getLawyerByUserId,
+  getLawyerById,
+  createLawyer,
+  updateLawyer,
+  deleteLawyer,
+};

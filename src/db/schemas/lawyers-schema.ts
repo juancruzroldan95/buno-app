@@ -15,7 +15,7 @@ export const lawyersTable = pgTable("lawyers_table", {
   website: text("website"),
   location: text("location"),
   rating: real("rating"),
-  userId: uuid("user_id").notNull(),
+  uid: text("uid").notNull(),
   ...timestamps,
 });
 

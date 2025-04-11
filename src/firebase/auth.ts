@@ -1,12 +1,12 @@
 import {
   GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged as _onAuthStateChanged,
-  onIdTokenChanged as _onIdTokenChanged,
   NextOrObserver,
   User,
+  onAuthStateChanged as _onAuthStateChanged,
+  onIdTokenChanged as _onIdTokenChanged,
+  getAdditionalUserInfo,
+  signInWithPopup,
 } from "firebase/auth";
-
 import { auth } from "./clientApp";
 
 export function onAuthStateChanged(cb: NextOrObserver<User>) {
@@ -19,18 +19,18 @@ export function onIdTokenChanged(cb: NextOrObserver<User>) {
 
 export async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
+  const result = await signInWithPopup(auth, provider);
 
-  try {
-    await signInWithPopup(auth, provider);
-  } catch (error) {
-    console.error("Error signing in with Google", error);
-  }
+  const user = result.user;
+  const additionalInfo = getAdditionalUserInfo(result);
+  const isNewUser = additionalInfo?.isNewUser;
+
+  return {
+    isNewUser,
+    user,
+  };
 }
 
 export async function signOut() {
-  try {
-    return auth.signOut();
-  } catch (error) {
-    console.error("Error signing out with Google", error);
-  }
+  return auth.signOut();
 }

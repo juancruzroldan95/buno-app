@@ -10,7 +10,7 @@ export const clientsTable = pgTable("clients_table", {
   phone: text("phone"),
   profilePicture: text("profile_picture"),
   gender: genderEnum("gender"),
-  userId: uuid("user_id").notNull(),
+  uid: text("uid").notNull(),
   ...timestamps,
 });
 

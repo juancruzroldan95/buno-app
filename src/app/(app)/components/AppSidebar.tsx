@@ -3,10 +3,36 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
-import { signOut, onIdTokenChanged } from "@/firebase/auth";
-import { setCookie, deleteCookie } from "cookies-next";
-
+import { usePathname, useRouter } from "next/navigation";
+import { deleteCookie, setCookie } from "cookies-next";
+import {
+  BadgeCheck,
+  Bell,
+  Calendar,
+  ChevronUp,
+  CreditCard,
+  Home,
+  Inbox,
+  LogOut,
+  ScrollText,
+  Search,
+  Settings,
+  Sparkles,
+  User2,
+  UserPen,
+} from "lucide-react";
+import { onIdTokenChanged, signOut } from "@/firebase/auth";
+import { SelectUser } from "@/db/schemas/users-schema";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -19,32 +45,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Calendar,
-  ChevronUp,
-  Home,
-  Inbox,
-  ScrollText,
-  Search,
-  Settings,
-  User2,
-  UserPen,
-  CreditCard,
-  Sparkles,
-  BadgeCheck,
-  Bell,
-  LogOut,
-} from "lucide-react";
 
 // Menu items.
 const lawyerItems = [
@@ -98,23 +98,16 @@ const clientItems = [
   },
 ];
 
-// Logged user
-const loggedUser = {
-  id: "4f40a187-4539-435a-92a4-0f13aea10cc3",
-  username: "shadcn",
-  email: "m@example.com",
-  role: 2,
-  avatar: "/avatars/shadcn.jpg",
-};
-
-function useUserSession(initialUser: any) {
+function useUserSession(initialUser: SelectUser) {
   useEffect(() => {
     return onIdTokenChanged(async (user) => {
       if (user) {
         const idToken = await user.getIdToken();
         await setCookie("__session", idToken);
+        console.log("cookie seteada en useUserSession");
       } else {
         await deleteCookie("__session");
+        console.log("cookie borrada en useUserSession");
       }
       if (initialUser?.uid === user?.uid) {
         return;
@@ -126,21 +119,25 @@ function useUserSession(initialUser: any) {
   return initialUser;
 }
 
-export default function AppSidebar({ initialUser }: { initialUser: any }) {
+export default function AppSidebar({
+  initialUser,
+}: {
+  initialUser: SelectUser;
+}) {
   const router = useRouter();
   const pathname = usePathname();
 
   const user = useUserSession(initialUser);
 
-  const handleSignOut = async (event: { preventDefault: () => void }) => {
+  function handleSignOut(event: { preventDefault: () => void }) {
     try {
       event.preventDefault();
-      await signOut();
+      signOut();
       router.push("/");
     } catch (error) {
       console.error("Error signing out", error);
     }
-  };
+  }
 
   return (
     <Sidebar variant="floating" collapsible="icon">
@@ -158,18 +155,16 @@ export default function AppSidebar({ initialUser }: { initialUser: any }) {
           <SidebarGroupLabel>Plataforma</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {(loggedUser.role === 1 ? lawyerItems : clientItems).map(
-                (item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={pathname === item.url}>
-                      <Link href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              )}
+              {(user?.roleId === 1 ? lawyerItems : clientItems).map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={pathname === item.url}>
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -183,16 +178,16 @@ export default function AppSidebar({ initialUser }: { initialUser: any }) {
                 <SidebarMenuButton size="lg">
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
-                      src={loggedUser.avatar}
-                      alt={loggedUser.username}
+                      src={(user?.photoURL as string) || undefined}
+                      alt={(user?.displayName as string) || undefined}
                     />
                     <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">
-                      {loggedUser.username}
+                      {user?.displayName}
                     </span>
-                    <span className="truncate text-xs">{loggedUser.email}</span>
+                    <span className="truncate text-xs">{user?.email}</span>
                   </div>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>

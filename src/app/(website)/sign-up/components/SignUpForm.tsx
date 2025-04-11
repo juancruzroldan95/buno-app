@@ -2,20 +2,15 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithGoogle } from "@/firebase/auth";
-
 import { zodResolver } from "@hookform/resolvers/zod";
+import { setCookie } from "cookies-next";
+import { Scale, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { signInWithGoogle } from "@/firebase/auth";
+import { createUser } from "@/lib/users-actions";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -26,7 +21,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Scale, User } from "lucide-react";
 
 const formSchema = z.object({
   firstName: z
@@ -47,6 +41,7 @@ const formSchema = z.object({
 export default function SignUpForm() {
   const router = useRouter();
   const [isSignUpLoading, setIsSignUpLoading] = useState(false);
+  const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -74,25 +69,44 @@ export default function SignUpForm() {
     }
   }
 
-  const handleGoogleSignIn = async (event: { preventDefault: () => void }) => {
+  async function handleGoogleSignUp(event: { preventDefault: () => void }) {
     event.preventDefault();
     try {
-      await signInWithGoogle();
-      router.push("/home");
+      setIsGoogleLoginLoading(true);
+      const { user, isNewUser } = await signInWithGoogle();
+      const idToken = await user.getIdToken();
+      await setCookie("__session", idToken);
+      console.log("cookie seteada en handleGoogleSignUp");
+
+      if (isNewUser) {
+        const dbUser = {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        };
+        await createUser(dbUser);
+        router.push("/select-role");
+      } else {
+        router.push("/home");
+      }
     } catch (error) {
       console.error("Error signing in with Google", error);
+    } finally {
+      setIsGoogleLoginLoading(false);
     }
-  };
+  }
 
   return (
     <Card>
       <CardContent className="pt-6">
         <div className="mb-6">
-          <div className="mb-6 grid grid-cols-2 gap-3">
+          <div className="mb-6 flex gap-3">
             <Button
               variant="outline"
               className="w-full"
-              onClick={handleGoogleSignIn}
+              onClick={handleGoogleSignUp}
+              disabled={isGoogleLoginLoading}
             >
               <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
                 <path
@@ -112,10 +126,12 @@ export default function SignUpForm() {
                   fill="#EA4335"
                 />
               </svg>
-              Google
+              {isGoogleLoginLoading
+                ? "Registrando con Google..."
+                : "Registrate con Google"}
             </Button>
 
-            <Button
+            {/* <Button
               variant="outline"
               className="w-full"
               onClick={() => console.log("Facebook login")}
@@ -127,7 +143,7 @@ export default function SignUpForm() {
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
               </svg>
               Facebook
-            </Button>
+            </Button> */}
           </div>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">

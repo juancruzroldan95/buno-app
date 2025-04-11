@@ -1,6 +1,10 @@
+import ProfileAvatar from "@/app/(app)/components/ProfileAvatar";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-
+import { getAllEducations } from "@/lib/educations-actions";
+import { getAllExperiences } from "@/lib/experiences-actions";
+import { getLawyerByUserId } from "@/lib/lawyers-actions";
+import { SelectUser } from "@/db/schemas/users-schema";
 import {
   Card,
   CardContent,
@@ -9,26 +13,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ProfileAvatar from "@/app/(app)/components/ProfileAvatar";
-
-import { getLawyerById } from "@/lib/lawyers-actions";
-import { getAllExperiences } from "@/lib/experiences-actions";
-import { getAllEducations } from "@/lib/educations-actions";
-
-import PersonalLawyerForm from "./PersonalLawyerForm";
-import CreateExperienceModal from "./CreateExperienceModal";
-import UpdateExperienceModal from "./UpdateExperienceModal";
-import DeleteExperienceModal from "./DeleteExperienceModal";
 import CreateEducationModal from "./CreateEducationModal";
-import UpdateEducationModal from "./UpdateEducationModal";
+import CreateExperienceModal from "./CreateExperienceModal";
 import DeleteEducationModal from "./DeleteEducationModal";
+import DeleteExperienceModal from "./DeleteExperienceModal";
+import PersonalLawyerForm from "./PersonalLawyerForm";
+import UpdateEducationModal from "./UpdateEducationModal";
+import UpdateExperienceModal from "./UpdateExperienceModal";
 
-export default async function LawyerProfilePage() {
-  const lawyerId = "3c3bb38c-89e2-479c-b10d-4e613a650e60";
-  const lawyerData = await getLawyerById(lawyerId);
+export default async function LawyerProfilePage({
+  user,
+}: {
+  user: SelectUser;
+}) {
+  const lawyerData = await getLawyerByUserId(user.uid);
 
-  const experiences = await getAllExperiences(lawyerId);
-  const educations = await getAllEducations(lawyerId);
+  const experiences = await getAllExperiences(lawyerData.lawyerId);
+  const educations = await getAllEducations(lawyerData.lawyerId);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 lg:px-8">
@@ -64,7 +65,7 @@ export default async function LawyerProfilePage() {
                     profilePicture={lawyerData.profilePicture ?? ""}
                     firstName={lawyerData.firstName ?? ""}
                     lastName={lawyerData.lastName ?? ""}
-                    lawyerId={lawyerId}
+                    lawyerId={lawyerData.lawyerId}
                   />
 
                   <div className="ml-4">
@@ -92,7 +93,7 @@ export default async function LawyerProfilePage() {
                     </CardDescription>
                   </div>
                   <div className="text-center md:text-right mt-4 md:mt-0">
-                    <CreateExperienceModal lawyerId={lawyerId} />
+                    <CreateExperienceModal lawyerId={lawyerData.lawyerId} />
                   </div>
                 </div>
               </CardHeader>
@@ -147,7 +148,7 @@ export default async function LawyerProfilePage() {
                     </CardDescription>
                   </div>
                   <div className="text-center md:text-right mt-4 md:mt-0">
-                    <CreateEducationModal lawyerId={lawyerId} />
+                    <CreateEducationModal lawyerId={lawyerData.lawyerId} />
                   </div>
                 </div>
               </CardHeader>

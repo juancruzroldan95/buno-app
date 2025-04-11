@@ -1,6 +1,6 @@
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-
+import ProfileAvatar from "@/app/(app)/components/ProfileAvatar";
+import { getClientByUserId } from "@/lib/clients-actions";
+import { SelectUser } from "@/db/schemas/users-schema";
 import {
   Card,
   CardContent,
@@ -8,15 +8,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import ProfileAvatar from "@/app/(app)/components/ProfileAvatar";
-
-import { getClientById } from "@/lib/clients-actions";
-
 import PersonalClientForm from "./PersonalClientForm";
 
-export default async function ClientProfilePage() {
-  const clientId = "3c3bb38c-89e2-479c-b10d-4e613a650e61";
-  const clientData = await getClientById(clientId);
+export default async function ClientProfilePage({
+  user,
+}: {
+  user: SelectUser;
+}) {
+  const clientData = await getClientByUserId(user.uid);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 lg:px-8">
@@ -39,7 +38,7 @@ export default async function ClientProfilePage() {
                 profilePicture={clientData.profilePicture ?? ""}
                 firstName={clientData.firstName ?? ""}
                 lastName={clientData.lastName ?? ""}
-                clientId={clientId}
+                clientId={clientData.clientId}
               />
 
               <div className="ml-4">

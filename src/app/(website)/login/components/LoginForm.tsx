@@ -1,15 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { setCookie } from "cookies-next";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { signInWithGoogle } from "@/firebase/auth";
+import { createUser } from "@/lib/users-actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -19,19 +21,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 
-const formSchema = z.object({
-  email: z.string().email("Por favor ingresá un email válido"),
-  password: z.string().min(1, "La contraseña es obligatoria"),
-  rememberMe: z.boolean().default(false),
-});
-
-export default function LoginPage() {
+export default function LoginForm() {
   const router = useRouter();
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const formSchema = z.object({
+    email: z.string().email("Por favor ingresá un email válido"),
+    password: z.string().min(1, "La contraseña es obligatoria"),
+    rememberMe: z.boolean().default(false),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,16 +59,29 @@ export default function LoginPage() {
     }
   }
 
-  async function handleGoogleLogin() {
+  async function handleGoogleLogin(event: { preventDefault: () => void }) {
+    event.preventDefault();
     try {
       setIsGoogleLoginLoading(true);
-      // const response = await googleLogin();
-      // console.log(response);
-      return;
-      router.push("/dashboard");
+      const { user, isNewUser } = await signInWithGoogle();
+      const idToken = await user.getIdToken();
+      await setCookie("__session", idToken);
+      console.log("cookie seteada en handleGoogleLogin");
+
+      if (isNewUser) {
+        const dbUser = {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        };
+        await createUser(dbUser);
+        router.push("/select-role");
+      } else {
+        router.push("/home");
+      }
     } catch (error) {
-      console.error(error);
-      // setErrorMessage(error.message);
+      console.error("Error signing in with Google", error);
     } finally {
       setIsGoogleLoginLoading(false);
     }
@@ -77,29 +91,49 @@ export default function LoginPage() {
     <Card>
       <CardContent className="pt-6">
         <div className="mb-6">
-          <div className="mb-6 grid grid-cols-2 gap-3">
+          <div className="mb-6 flex gap-3">
             <Button
               variant="outline"
               className="w-full"
               onClick={handleGoogleLogin}
               disabled={isGoogleLoginLoading}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
-                <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+              <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  fill="#4285F4"
+                />
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                  fill="#FBBC05"
+                />
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  fill="#EA4335"
+                />
               </svg>
-              Google
+              {isGoogleLoginLoading
+                ? "Entrando con Google..."
+                : "Iniciá sesión con Google"}
             </Button>
 
-            <Button
+            {/* <Button
               variant="outline"
               className="w-full"
               onClick={() => console.log("Facebook login")}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                <path d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z" />
+              <svg
+                className="h-5 w-5 mr-2 text-[#1877F2] fill-current"
+                viewBox="0 0 24 24"
+              >
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
               </svg>
               Facebook
-            </Button>
+            </Button> */}
           </div>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
