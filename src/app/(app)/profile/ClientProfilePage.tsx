@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import PersonalClientForm from "./PersonalClientForm";
+import PersonalClientForm from "./components/PersonalClientForm";
 
 export default async function ClientProfilePage({
   user,
@@ -27,7 +27,7 @@ export default async function ClientProfilePage({
       </div>
 
       <div className="flex items-center justify-between">
-        <Card>
+        <Card className="space-y-4 w-full">
           <CardHeader>
             <CardTitle>Información Personal</CardTitle>
             <CardDescription>Actualizá tu información personal</CardDescription>
@@ -39,6 +39,7 @@ export default async function ClientProfilePage({
                 firstName={clientData.firstName ?? ""}
                 lastName={clientData.lastName ?? ""}
                 clientId={clientData.clientId}
+                userId={user.uid}
               />
 
               <div className="ml-4">

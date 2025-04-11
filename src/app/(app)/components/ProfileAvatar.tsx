@@ -1,11 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { uploadFile } from "@/firebase/storage";
-import { updateLawyer } from "@/lib/lawyers-actions";
 import { useToast } from "@/hooks/use-toast";
+import { uploadProfilePicture } from "@/firebase/storage";
 import { updateClient } from "@/lib/clients-actions";
+import { updateLawyer } from "@/lib/lawyers-actions";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface ProfileAvatarProps {
   profilePicture?: string;
@@ -13,6 +13,7 @@ interface ProfileAvatarProps {
   lastName?: string;
   lawyerId?: string;
   clientId?: string;
+  userId: string;
 }
 
 export default function ProfileAvatar({
@@ -21,36 +22,29 @@ export default function ProfileAvatar({
   lastName,
   lawyerId,
   clientId,
+  userId,
 }: ProfileAvatarProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarUrl, setAvatarUrl] = useState(profilePicture ?? "");
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  function handleAvatarClick() {
-    fileInputRef.current?.click();
-  }
-
-  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  async function handleProfilePictureChange(target: HTMLInputElement) {
+    const image = target.files?.[0];
+    if (!image) return;
 
     try {
-      const url = await uploadFile(file);
-      setAvatarUrl(url);
+      const imageUrl = await uploadProfilePicture(userId, image);
+      setAvatarUrl(imageUrl);
+
       if (lawyerId) {
-        await updateLawyer(lawyerId, {
-          profilePicture: url,
-        });
+        await updateLawyer(lawyerId, { profilePicture: imageUrl });
       } else if (clientId) {
-        await updateClient(clientId, {
-          profilePicture: url,
-        });
+        await updateClient(clientId, { profilePicture: imageUrl });
       }
-      toast({
-        description: "La foto se guardó correctamente.",
-      });
+
+      toast({ description: "La foto se guardó correctamente." });
     } catch (error) {
-      console.error("HandleFileChange error:", error);
+      console.error("handleProfilePictureChange error:", error);
       toast({
         variant: "destructive",
         title: "¡Oh no! Algo falló.",
@@ -62,15 +56,15 @@ export default function ProfileAvatar({
   return (
     <div className="relative">
       <input
-        type="file"
-        accept="image/*"
-        className="hidden"
         ref={fileInputRef}
-        onChange={handleFileChange}
+        type="file"
+        id="upload-image"
+        className="hidden"
+        onChange={(e) => handleProfilePictureChange(e.target)}
       />
       <Avatar
+        onClick={() => fileInputRef.current?.click()}
         className="h-24 w-24 cursor-pointer transition-opacity hover:opacity-80"
-        onClick={handleAvatarClick}
       >
         <AvatarImage
           src={avatarUrl}

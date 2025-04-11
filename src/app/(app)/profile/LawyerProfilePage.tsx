@@ -13,13 +13,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CreateEducationModal from "./CreateEducationModal";
-import CreateExperienceModal from "./CreateExperienceModal";
-import DeleteEducationModal from "./DeleteEducationModal";
-import DeleteExperienceModal from "./DeleteExperienceModal";
-import PersonalLawyerForm from "./PersonalLawyerForm";
-import UpdateEducationModal from "./UpdateEducationModal";
-import UpdateExperienceModal from "./UpdateExperienceModal";
+import CreateEducationModal from "./components/CreateEducationModal";
+import CreateExperienceModal from "./components/CreateExperienceModal";
+import DeleteEducationModal from "./components/DeleteEducationModal";
+import DeleteExperienceModal from "./components/DeleteExperienceModal";
+import PersonalLawyerForm from "./components/PersonalLawyerForm";
+import UpdateEducationModal from "./components/UpdateEducationModal";
+import UpdateExperienceModal from "./components/UpdateExperienceModal";
 
 export default async function LawyerProfilePage({
   user,
@@ -42,7 +42,7 @@ export default async function LawyerProfilePage({
 
       <div className="flex items-center justify-between">
         <Tabs defaultValue="personal" className="space-y-4 w-full">
-          <TabsList>
+          <TabsList className="w-full md:w-auto">
             <TabsTrigger value="personal">Información Personal</TabsTrigger>
             <TabsTrigger value="experience">
               <span className="hidden sm:inline">Experiencia profesional</span>
@@ -66,6 +66,7 @@ export default async function LawyerProfilePage({
                     firstName={lawyerData.firstName ?? ""}
                     lastName={lawyerData.lastName ?? ""}
                     lawyerId={lawyerData.lawyerId}
+                    userId={lawyerData.uid}
                   />
 
                   <div className="ml-4">

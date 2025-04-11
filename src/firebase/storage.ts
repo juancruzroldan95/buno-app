@@ -1,11 +1,10 @@
-"use server";
-
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "./clientApp";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-export async function uploadFile(file: File) {
-  const storageRef = ref(storage, `profile_pictures/${file.name}`);
-  const snapshot = await uploadBytes(storageRef, file);
-  const url = await getDownloadURL(snapshot.ref);
-  return url;
+export async function uploadProfilePicture(uid: string, image: File) {
+  const filePath = `images/${uid}/${image.name}`;
+  const newImageRef = ref(storage, filePath);
+  await uploadBytesResumable(newImageRef, image);
+
+  return await getDownloadURL(newImageRef);
 }

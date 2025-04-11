@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-
+import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { Loader2 } from "lucide-react";
-
+import { updateClient } from "@/lib/clients-actions";
+import { SelectClient } from "@/db/schemas/clients-schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,10 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-
-import { updateClient } from "@/lib/clients-actions";
-import { SelectClient } from "@/db/schemas/clients-schema";
 import {
   Select,
   SelectContent,
@@ -181,7 +177,11 @@ export default function PersonalClientForm({
         </div>
 
         <div className="flex justify-end">
-          <Button type="submit" disabled={profileForm.formState.isSubmitting}>
+          <Button
+            type="submit"
+            className="w-full sm:w-auto"
+            disabled={profileForm.formState.isSubmitting}
+          >
             {profileForm.formState.isSubmitting
               ? "Guardando..."
               : "Guardar Cambios"}
