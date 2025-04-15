@@ -1,19 +1,18 @@
 "use client";
 
 import React from "react";
-
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { CalendarIcon, Loader2 } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/utils/utils";
-
+import { createExperience, updateExperience } from "@/lib/experiences-actions";
+import { SelectExperience } from "@/db/schemas/experiences-schema";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -22,19 +21,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useToast } from "@/hooks/use-toast";
-
-import { createExperience, updateExperience } from "@/lib/experiences-actions";
-import { SelectExperience } from "@/db/schemas/experiences-schema";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ExperienceFormProps {
-  lawyerId?: string;
+  lawyerId: string;
   experience?: SelectExperience;
   setOpen: (open: boolean) => void;
 }
@@ -80,7 +76,7 @@ export default function ExperienceForm({
       if (experience?.experienceId) {
         await updateExperience(experience.experienceId, data);
       } else {
-        await createExperience({ ...data, lawyerId: lawyerId! });
+        await createExperience({ ...data, lawyerId: lawyerId });
       }
       toast({
         description: "Los cambios fueron guardados correctamente.",

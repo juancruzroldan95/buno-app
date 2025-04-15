@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-
+import { Pencil } from "lucide-react";
+import { SelectExperience } from "@/db/schemas/experiences-schema";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,13 +12,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Pencil } from "lucide-react";
 import ExperienceForm from "./ExperienceForm";
-import { SelectExperience } from "@/db/schemas/experiences-schema";
 
 export default function UpdateExperienceModal({
+  lawyerId,
   experience,
 }: {
+  lawyerId: string;
   experience: SelectExperience;
 }) {
   const [open, setOpen] = useState(false);
@@ -34,7 +35,11 @@ export default function UpdateExperienceModal({
           <DialogTitle>Actualizar Experiencia</DialogTitle>
         </DialogHeader>
         <DialogDescription>Actualizá tu experiencia laboral</DialogDescription>
-        <ExperienceForm experience={experience} setOpen={setOpen} />
+        <ExperienceForm
+          lawyerId={lawyerId}
+          experience={experience}
+          setOpen={setOpen}
+        />
       </DialogContent>
     </Dialog>
   );

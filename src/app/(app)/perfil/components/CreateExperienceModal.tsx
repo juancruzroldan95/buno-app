@@ -1,18 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
 import ExperienceForm from "./ExperienceForm";
-import { DialogDescription } from "@radix-ui/react-dialog";
 
 export default function CreateExperienceModal({
   lawyerId,

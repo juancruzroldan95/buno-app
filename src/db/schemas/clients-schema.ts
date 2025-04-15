@@ -14,7 +14,9 @@ export const clientsTable = pgTable("clients_table", {
   phone: text("phone"),
   profilePicture: text("profile_picture"),
   gender: genderEnum("gender"),
-  uid: text("uid").references(() => usersTable.uid),
+  uid: text("uid")
+    .references(() => usersTable.uid)
+    .notNull(),
   ...timestamps,
 });
 

@@ -109,7 +109,10 @@ export default async function LawyerProfilePage({
                             <CardDescription>{exp.company}</CardDescription>
                           </div>
                           <div>
-                            <UpdateExperienceModal experience={exp} />
+                            <UpdateExperienceModal
+                              lawyerId={lawyerData.lawyerId}
+                              experience={exp}
+                            />
                             <DeleteExperienceModal
                               experienceId={exp.experienceId}
                             />

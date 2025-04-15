@@ -1,8 +1,18 @@
 import Image from "next/image";
-
 // Components
-import { CreateCaseModal } from "@/components/CreateCaseModal";
-
+import { CreateCaseModal } from "@/app/(app)/tus-casos/components/CreateCaseModal";
+import {
+  BaggageClaim,
+  Briefcase,
+  Building,
+  Handshake,
+  Home,
+  Scale,
+  Search,
+  Shield,
+  TreeDeciduous,
+  Users,
+} from "lucide-react";
 // UI
 import { Button } from "@/components/ui/button";
 import {
@@ -13,19 +23,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-
-import {
-  Search,
-  Users,
-  Scale,
-  Shield,
-  Building,
-  BaggageClaim,
-  Briefcase,
-  Home,
-  TreeDeciduous,
-  Handshake,
-} from "lucide-react";
 
 const services = [
   {

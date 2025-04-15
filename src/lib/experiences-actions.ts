@@ -53,7 +53,7 @@ async function getExperienceById(id: SelectExperience["experienceId"]) {
 }
 
 async function createExperience(data: InsertExperience) {
-  const result = await db.insert(experiencesTable).values(data);
+  const result = await db.insert(experiencesTable).values(data).returning();
 
   revalidatePath("/profile");
   return result;

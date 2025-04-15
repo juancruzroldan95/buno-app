@@ -32,7 +32,9 @@ export const lawyersTable = pgTable("lawyers_table", {
   linkedinUrl: text("linkedin_url"),
   website: text("website"),
   rating: numeric("rating", { precision: 3, scale: 2 }),
-  uid: text("uid").references(() => usersTable.uid),
+  uid: text("uid")
+    .references(() => usersTable.uid)
+    .notNull(),
   ...timestamps,
 });
 
