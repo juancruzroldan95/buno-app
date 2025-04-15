@@ -16,9 +16,16 @@ export const caseStatusEnum = pgEnum("case_status", [
   "cancelled",
 ]);
 
-export const proposalStatusEnum = pgEnum("proposal_status", [
+export const bidStatusEnum = pgEnum("bid_status", [
   "pending",
   "accepted",
   "rejected",
   "withdrawn",
+]);
+
+export const verifiedStatusEnum = pgEnum("verified_status", [
+  "pending",
+  "in_review",
+  "verified",
+  "rejected",
 ]);

@@ -6,13 +6,17 @@ import { eq } from "drizzle-orm";
 import { InsertUser, SelectUser, usersTable } from "@/db/schemas/users-schema";
 
 async function getUserByUid(uid: SelectUser["uid"]) {
+  if (!uid) {
+    throw new Error("El UID no puede estar vacío.");
+  }
+
   const result = await db
     .select()
     .from(usersTable)
     .where(eq(usersTable.uid, uid));
 
   if (result.length === 0) {
-    throw new Error(`No se encontró ningún usuario con el ID: ${uid}`);
+    throw new Error(`No se encontró ningún usuario con el UID: ${uid}`);
   }
 
   return result[0];
@@ -27,6 +31,10 @@ async function updateUser(
   uid: SelectUser["uid"],
   data: Partial<Omit<SelectUser, "uid">>
 ) {
+  if (!uid) {
+    throw new Error("El UID no puede estar vacío.");
+  }
+
   const result = await db
     .update(usersTable)
     .set(data)
@@ -34,7 +42,7 @@ async function updateUser(
     .returning();
 
   if (result.length === 0) {
-    throw new Error(`No se encontró ningún usuario con el ID: ${uid}`);
+    throw new Error(`No se encontró ningún usuario con el UID: ${uid}`);
   }
 
   revalidatePath("/profile");
@@ -42,7 +50,11 @@ async function updateUser(
 }
 
 async function deleteUser(uid: SelectUser["uid"]) {
-  const data = { isDeleted: true };
+  if (!uid) {
+    throw new Error("El UID no puede estar vacío.");
+  }
+
+  const data = { isDeleted: true, deletedAt: new Date() };
   await db.update(usersTable).set(data).where(eq(usersTable.uid, uid));
 }
 

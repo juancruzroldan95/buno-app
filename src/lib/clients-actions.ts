@@ -10,6 +10,10 @@ import { SelectUser } from "@/db/schemas/users-schema";
 import { db } from "../db";
 
 async function getClientByUserId(userId: SelectUser["uid"]) {
+  if (!userId) {
+    throw new Error("El ID del usuario es requerido para buscar el cliente.");
+  }
+
   const result = await db
     .select()
     .from(clientsTable)
@@ -25,6 +29,10 @@ async function getClientByUserId(userId: SelectUser["uid"]) {
 }
 
 async function getClientById(id: SelectClient["clientId"]) {
+  if (!id) {
+    throw new Error("El ID del cliente es requerido para buscarlo.");
+  }
+
   const result = await db
     .select()
     .from(clientsTable)
@@ -45,6 +53,10 @@ async function updateClient(
   id: SelectClient["clientId"],
   data: Partial<Omit<SelectClient, "clientId">>
 ) {
+  if (!id) {
+    throw new Error("El ID del cliente es requerido para actualizarlo.");
+  }
+
   const result = await db
     .update(clientsTable)
     .set(data)
@@ -59,7 +71,11 @@ async function updateClient(
 }
 
 async function deleteClient(id: SelectClient["clientId"]) {
-  const data = { isDeleted: true };
+  if (!id) {
+    throw new Error("El ID del cliente es requerido para eliminarlo.");
+  }
+
+  const data = { isDeleted: true, deletedAt: new Date() };
   await db.update(clientsTable).set(data).where(eq(clientsTable.clientId, id));
 }
 

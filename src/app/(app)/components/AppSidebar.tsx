@@ -50,22 +50,22 @@ import {
 const lawyerItems = [
   {
     title: "Inicio",
-    url: "/home",
+    url: "/inicio",
     icon: Home,
   },
   {
     title: "Buscar casos",
-    url: "/search-cases",
+    url: "/casos",
     icon: Search,
   },
   {
-    title: "Mis casos",
-    url: "/my-cases",
+    title: "Mis trabajos",
+    url: "/mis-casos",
     icon: Inbox,
   },
   {
     title: "Mi perfil",
-    url: "/profile",
+    url: "/perfil",
     icon: UserPen,
   },
   // {
@@ -81,19 +81,19 @@ const lawyerItems = [
 ];
 
 const clientItems = [
-  {
-    title: "Inicio",
-    url: "/home",
-    icon: Home,
-  },
+  // {
+  //   title: "Inicio",
+  //   url: "/inicio",
+  //   icon: Home,
+  // },
   {
     title: "Tus casos",
-    url: "/your-cases",
+    url: "/tus-casos",
     icon: ScrollText,
   },
   {
     title: "Mi perfil",
-    url: "/profile",
+    url: "/perfil",
     icon: UserPen,
   },
 ];

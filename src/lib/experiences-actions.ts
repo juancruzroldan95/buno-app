@@ -1,15 +1,19 @@
 "use server";
 
-import { eq, and, desc } from "drizzle-orm";
-import { db } from "../db";
+import { revalidatePath } from "next/cache";
+import { and, desc, eq } from "drizzle-orm";
 import {
   InsertExperience,
   SelectExperience,
   experiencesSchema,
 } from "@/db/schemas/experiences-schema";
-import { revalidatePath } from "next/cache";
+import { db } from "../db";
 
 async function getAllExperiences(lawyerId: SelectExperience["lawyerId"]) {
+  if (!lawyerId) {
+    throw new Error("El ID del abogado no puede estar vacío.");
+  }
+
   const result = await db
     .select()
     .from(experiencesSchema)
@@ -25,6 +29,10 @@ async function getAllExperiences(lawyerId: SelectExperience["lawyerId"]) {
 }
 
 async function getExperienceById(id: SelectExperience["experienceId"]) {
+  if (!id) {
+    throw new Error("El ID de la experiencia laboral no puede estar vacío.");
+  }
+
   const result = await db
     .select()
     .from(experiencesSchema)
@@ -55,6 +63,10 @@ async function updateExperience(
   id: SelectExperience["experienceId"],
   data: Partial<Omit<SelectExperience, "experienceId">>
 ) {
+  if (!id) {
+    throw new Error("El ID de la experiencia laboral no puede estar vacío.");
+  }
+
   const result = await db
     .update(experiencesSchema)
     .set(data)
@@ -72,6 +84,10 @@ async function updateExperience(
 }
 
 async function deleteExperience(id: SelectExperience["experienceId"]) {
+  if (!id) {
+    throw new Error("El ID de la experiencia laboral no puede estar vacío.");
+  }
+
   const data = { isDeleted: true, deletedAt: new Date() };
   const result = await db
     .update(experiencesSchema)
