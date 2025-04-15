@@ -16,9 +16,9 @@ export const lawyersTable = pgTable("lawyers_table", {
   email: text("email").unique(),
   phone: text("phone"),
   profilePicture: text("profile_picture"),
-  provinceId: integer("province_id")
-    .notNull()
-    .references(() => provincesCatalog.provinceId),
+  provinceId: integer("province_id").references(
+    () => provincesCatalog.provinceId
+  ),
   gender: genderEnum("gender"),
   bio: text("bio"),
   jurisdiction: text("jurisdiction"),

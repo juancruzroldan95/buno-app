@@ -5,7 +5,7 @@ import { and, desc, eq } from "drizzle-orm";
 import {
   InsertExperience,
   SelectExperience,
-  experiencesSchema,
+  experiencesTable,
 } from "@/db/schemas/experiences-schema";
 import { db } from "../db";
 
@@ -16,14 +16,14 @@ async function getAllExperiences(lawyerId: SelectExperience["lawyerId"]) {
 
   const result = await db
     .select()
-    .from(experiencesSchema)
+    .from(experiencesTable)
     .where(
       and(
-        eq(experiencesSchema.lawyerId, lawyerId),
-        eq(experiencesSchema.isDeleted, false)
+        eq(experiencesTable.lawyerId, lawyerId),
+        eq(experiencesTable.isDeleted, false)
       )
     )
-    .orderBy(desc(experiencesSchema.startDate));
+    .orderBy(desc(experiencesTable.startDate));
 
   return result;
 }
@@ -35,11 +35,11 @@ async function getExperienceById(id: SelectExperience["experienceId"]) {
 
   const result = await db
     .select()
-    .from(experiencesSchema)
+    .from(experiencesTable)
     .where(
       and(
-        eq(experiencesSchema.experienceId, id),
-        eq(experiencesSchema.isDeleted, false)
+        eq(experiencesTable.experienceId, id),
+        eq(experiencesTable.isDeleted, false)
       )
     );
 
@@ -53,7 +53,7 @@ async function getExperienceById(id: SelectExperience["experienceId"]) {
 }
 
 async function createExperience(data: InsertExperience) {
-  const result = await db.insert(experiencesSchema).values(data);
+  const result = await db.insert(experiencesTable).values(data);
 
   revalidatePath("/profile");
   return result;
@@ -68,9 +68,9 @@ async function updateExperience(
   }
 
   const result = await db
-    .update(experiencesSchema)
+    .update(experiencesTable)
     .set(data)
-    .where(eq(experiencesSchema.experienceId, id))
+    .where(eq(experiencesTable.experienceId, id))
     .returning();
 
   if (result.length === 0) {
@@ -90,9 +90,9 @@ async function deleteExperience(id: SelectExperience["experienceId"]) {
 
   const data = { isDeleted: true, deletedAt: new Date() };
   const result = await db
-    .update(experiencesSchema)
+    .update(experiencesTable)
     .set(data)
-    .where(eq(experiencesSchema.experienceId, id))
+    .where(eq(experiencesTable.experienceId, id))
     .returning();
 
   if (result.length === 0) {

@@ -76,7 +76,6 @@ export default function SignUpForm() {
       const { user, isNewUser } = await signInWithGoogle();
       const idToken = await user.getIdToken();
       await setCookie("__session", idToken);
-      console.log("cookie seteada en handleGoogleSignUp");
 
       if (isNewUser) {
         const dbUser = {
@@ -86,9 +85,9 @@ export default function SignUpForm() {
           photoURL: user.photoURL,
         };
         await createUser(dbUser);
-        router.push("/select-role");
+        router.push("/elegir-rol");
       } else {
-        router.push("/home");
+        router.push("/inicio");
       }
     } catch (error) {
       console.error("Error signing in with Google", error);

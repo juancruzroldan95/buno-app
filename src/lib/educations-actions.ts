@@ -1,22 +1,22 @@
 "use server";
 
-import { eq, and } from "drizzle-orm";
-import { db } from "../db";
+import { revalidatePath } from "next/cache";
+import { and, eq } from "drizzle-orm";
 import {
   InsertEducation,
   SelectEducation,
-  educationsSchema,
+  educationsTable,
 } from "@/db/schemas/educations-schema";
-import { revalidatePath } from "next/cache";
+import { db } from "../db";
 
 async function getAllEducations(lawyerId: SelectEducation["lawyerId"]) {
   const result = await db
     .select()
-    .from(educationsSchema)
+    .from(educationsTable)
     .where(
       and(
-        eq(educationsSchema.lawyerId, lawyerId),
-        eq(educationsSchema.isDeleted, false)
+        eq(educationsTable.lawyerId, lawyerId),
+        eq(educationsTable.isDeleted, false)
       )
     );
 
@@ -26,11 +26,11 @@ async function getAllEducations(lawyerId: SelectEducation["lawyerId"]) {
 async function getEducationById(id: SelectEducation["educationId"]) {
   const result = await db
     .select()
-    .from(educationsSchema)
+    .from(educationsTable)
     .where(
       and(
-        eq(educationsSchema.educationId, id),
-        eq(educationsSchema.isDeleted, false)
+        eq(educationsTable.educationId, id),
+        eq(educationsTable.isDeleted, false)
       )
     );
 
@@ -42,7 +42,7 @@ async function getEducationById(id: SelectEducation["educationId"]) {
 }
 
 async function createEducation(data: InsertEducation) {
-  const result = await db.insert(educationsSchema).values(data);
+  const result = await db.insert(educationsTable).values(data);
 
   revalidatePath("/profile");
   return result;
@@ -53,9 +53,9 @@ async function updateEducation(
   data: Partial<Omit<SelectEducation, "educationId">>
 ) {
   const result = await db
-    .update(educationsSchema)
+    .update(educationsTable)
     .set(data)
-    .where(eq(educationsSchema.educationId, id))
+    .where(eq(educationsTable.educationId, id))
     .returning();
 
   if (result.length === 0) {
@@ -69,9 +69,9 @@ async function updateEducation(
 async function deleteEducation(id: SelectEducation["educationId"]) {
   const data = { isDeleted: true, deletedAt: new Date() };
   const result = await db
-    .update(educationsSchema)
+    .update(educationsTable)
     .set(data)
-    .where(eq(educationsSchema.educationId, id))
+    .where(eq(educationsTable.educationId, id))
     .returning();
 
   if (result.length === 0) {

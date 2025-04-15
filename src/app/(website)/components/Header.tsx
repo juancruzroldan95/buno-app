@@ -3,11 +3,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-import HamburgerBtn from "./HamburgerBtn";
 import { CreateCaseModal } from "@/components/CreateCaseModal";
-import MobileMenu from "./MobileMenu";
-
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -15,8 +13,8 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import HamburgerBtn from "./HamburgerBtn";
+import MobileMenu from "./MobileMenu";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -47,21 +45,21 @@ export default function Header() {
         <NavigationMenu className="hidden md:block">
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link href="/our-lawyers" legacyBehavior passHref>
+              <Link href="/nuestros-abogados" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Nuestros abogados
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/for-lawyers" legacyBehavior passHref>
+              <Link href="/para-abogados" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   Para abogados
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/about-us" legacyBehavior passHref>
+              <Link href="/sobre-nosotros" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   ¿Quiénes somos?
                 </NavigationMenuLink>

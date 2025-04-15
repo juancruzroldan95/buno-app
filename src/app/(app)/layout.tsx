@@ -15,12 +15,14 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   const { currentUser } = await getAuthenticatedAppForUser();
-
   if (!currentUser) {
     redirect("/");
   }
 
   const dbUser = await getUserByUid(currentUser?.uid as string);
+  if (!dbUser.roleId) {
+    redirect("/elegir-rol");
+  }
 
   return (
     <SidebarProvider>

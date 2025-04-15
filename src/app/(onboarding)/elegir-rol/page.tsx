@@ -10,6 +10,9 @@ export default async function SelectRolePage() {
   }
 
   const dbUser = await getUserByUid(currentUser?.uid as string);
+  if (dbUser.roleId) {
+    redirect("/inicio");
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
