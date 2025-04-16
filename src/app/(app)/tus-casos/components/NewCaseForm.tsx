@@ -111,7 +111,7 @@ export default function newCaseForm({
             </FormItem>
           )}
         />
-        <FormDescription>
+        <div className="text-sm text-muted-foreground">
           Una buena descripción incluye:
           <ul className="list-disc pl-4">
             <li>Detalles únicos sobre su proyecto o necesidades legales.</li>
@@ -119,7 +119,7 @@ export default function newCaseForm({
             <li>Sus expectativas presupuestarias.</li>
             <li>Experiencia legal específica que necesita.</li>
           </ul>
-        </FormDescription>
+        </div>
         <FormField
           control={newCaseForm.control}
           name="provinceId"

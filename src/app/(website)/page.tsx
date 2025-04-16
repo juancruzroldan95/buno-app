@@ -1,6 +1,5 @@
 import Image from "next/image";
-// Components
-import { CreateCaseModal } from "@/app/(app)/tus-casos/components/CreateCaseModal";
+import Link from "next/link";
 import {
   BaggageClaim,
   Briefcase,
@@ -13,7 +12,6 @@ import {
   TreeDeciduous,
   Users,
 } from "lucide-react";
-// UI
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,7 +20,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 const services = [
   {
@@ -145,30 +142,24 @@ export default function HomePage() {
                 <div className="mt-4 lg:flex lg:flex-row items-center">
                   <p className="text-2xl">¿De dónde sos?</p>
                   <div className="flex justify-center mt-2 lg:m-0">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          size="lg"
-                          variant="outline"
-                          className="text-xl font-bold mx-2"
-                        >
-                          CABA
-                        </Button>
-                      </DialogTrigger>
-                      <CreateCaseModal selectedLocation="CABA" />
-                    </Dialog>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          size="lg"
-                          variant="outline"
-                          className="text-xl font-bold mx-2"
-                        >
-                          Provincia
-                        </Button>
-                      </DialogTrigger>
-                      <CreateCaseModal selectedLocation="Provincia" />
-                    </Dialog>
+                    <Link href="/sign-up">
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="text-xl font-bold mx-2"
+                      >
+                        CABA
+                      </Button>
+                    </Link>
+                    <Link href="/sign-up">
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="text-xl font-bold mx-2"
+                      >
+                        Provincia
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>

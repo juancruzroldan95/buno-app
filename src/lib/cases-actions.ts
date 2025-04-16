@@ -3,16 +3,36 @@
 import { revalidatePath } from "next/cache";
 import { and, desc, eq } from "drizzle-orm";
 import { InsertCase, SelectCase, casesTable } from "@/db/schemas/cases-schema";
+import { lawAreasCatalog } from "@/db/schemas/law-areas-schema";
+import { provincesCatalog } from "@/db/schemas/provinces-schema";
 import { db } from "../db";
 
-async function getAllCases(clientId: SelectCase["clientId"]) {
+async function getAllCasesByClientId(clientId: SelectCase["clientId"]) {
   if (!clientId) {
     throw new Error("El ID del cliente no puede estar vacío.");
   }
 
   const result = await db
-    .select()
+    .select({
+      caseId: casesTable.caseId,
+      title: casesTable.title,
+      description: casesTable.description,
+      lawAreaId: casesTable.lawAreaId,
+      lawAreaLabel: lawAreasCatalog.lawAreaLabel,
+      provinceId: casesTable.provinceId,
+      provinceLabel: provincesCatalog.provinceLabel,
+      status: casesTable.status,
+      createdAt: casesTable.createdAt,
+    })
     .from(casesTable)
+    .leftJoin(
+      lawAreasCatalog,
+      eq(casesTable.lawAreaId, lawAreasCatalog.lawAreaId)
+    )
+    .leftJoin(
+      provincesCatalog,
+      eq(casesTable.provinceId, provincesCatalog.provinceId)
+    )
     .where(
       and(eq(casesTable.clientId, clientId), eq(casesTable.isDeleted, false))
     )
@@ -87,4 +107,22 @@ async function deleteCase(caseId: SelectCase["caseId"]) {
   return result[0];
 }
 
-export { getAllCases, getCaseById, createCase, updateCase, deleteCase };
+export type GetCase = {
+  caseId: string;
+  title: string | null;
+  description: string;
+  lawAreaId: number;
+  lawAreaLabel: string | null;
+  provinceId: number;
+  provinceLabel: string | null;
+  status: "open" | "in_progress" | "closed" | "cancelled";
+  createdAt: Date;
+};
+
+export {
+  getAllCasesByClientId,
+  getCaseById,
+  createCase,
+  updateCase,
+  deleteCase,
+};

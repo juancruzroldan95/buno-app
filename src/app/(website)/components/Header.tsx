@@ -69,14 +69,11 @@ export default function Header() {
         </NavigationMenu>
 
         <div className="hidden md:flex space-x-4">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="default" className="text-lg">
-                Publicá tu caso
-              </Button>
-            </DialogTrigger>
-            <CreateCaseModal />
-          </Dialog>
+          <Link href="/sign-up">
+            <Button variant="default" className="text-lg">
+              Publicá tu caso
+            </Button>
+          </Link>
           <Link href="/login">
             <Button variant="ghost">Iniciar sesión</Button>
           </Link>
