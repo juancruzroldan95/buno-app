@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getAuthenticatedAppForUser } from "@/firebase/serverApp";
 import { getUserByUid } from "@/lib/users-actions";
+import { SelectUser } from "@/db/schemas/users-schema";
 import { SelectRoleCards } from "./SelectRoleCards";
 
 export default async function SelectRolePage() {
@@ -9,7 +10,7 @@ export default async function SelectRolePage() {
     redirect("/");
   }
 
-  const dbUser = await getUserByUid(currentUser?.uid as string);
+  const dbUser = await getUserByUid(currentUser?.uid as SelectUser["uid"]);
   if (dbUser.roleId) {
     redirect("/inicio");
   }

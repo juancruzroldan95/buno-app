@@ -80,7 +80,7 @@ export default function LoginForm() {
         router.push("/inicio");
       }
     } catch (error) {
-      console.error("Error signing in with Google", error);
+      console.error("Error in Google Login", error);
     } finally {
       setIsGoogleLoginLoading(false);
     }

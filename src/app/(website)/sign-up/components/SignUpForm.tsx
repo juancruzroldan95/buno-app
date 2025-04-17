@@ -22,26 +22,28 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-const formSchema = z.object({
-  firstName: z
-    .string()
-    .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
-  lastName: z
-    .string()
-    .min(2, { message: "El apellido debe tener al menos 2 caracteres" }),
-  email: z.string().email({ message: "Por favor ingresá un email válido" }),
-  password: z
-    .string()
-    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
-  accountType: z.enum(["lawyer", "client"], {
-    message: "Por favor seleccioná un tipo de cuenta",
-  }),
-});
-
 export default function SignUpForm() {
   const router = useRouter();
   const [isSignUpLoading, setIsSignUpLoading] = useState(false);
   const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false);
+  const [googleErrorMessage, setGoogleErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const formSchema = z.object({
+    firstName: z
+      .string()
+      .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
+    lastName: z
+      .string()
+      .min(2, { message: "El apellido debe tener al menos 2 caracteres" }),
+    email: z.string().email({ message: "Por favor ingresá un email válido" }),
+    password: z
+      .string()
+      .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
+    accountType: z.enum(["lawyer", "client"], {
+      message: "Por favor seleccioná un tipo de cuenta",
+    }),
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -90,7 +92,10 @@ export default function SignUpForm() {
         router.push("/inicio");
       }
     } catch (error) {
-      console.error("Error signing in with Google", error);
+      console.error("Error in Google Sign Up", error);
+      setGoogleErrorMessage(
+        "Error al registrarse con Google. Intentá de nuevo."
+      );
     } finally {
       setIsGoogleLoginLoading(false);
     }
@@ -143,6 +148,10 @@ export default function SignUpForm() {
               </svg>
               Facebook
             </Button> */}
+
+            {googleErrorMessage && (
+              <p className="text-red-500 text-sm mt-2">{googleErrorMessage}</p>
+            )}
           </div>
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
