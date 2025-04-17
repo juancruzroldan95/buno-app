@@ -3,9 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CreateCaseModal } from "@/app/(app)/tus-casos/components/CreateCaseModal";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
   NavigationMenu,
   NavigationMenuItem,

@@ -9,14 +9,11 @@ import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createCase } from "@/lib/cases-actions";
-import { SelectLawArea } from "@/db/schemas/law-areas-schema";
-import { SelectProvince } from "@/db/schemas/provinces-schema";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -45,7 +42,6 @@ export default function NewCaseForm({
   setOpen,
 }: NewCaseFormProps) {
   const { toast } = useToast();
-  const router = useRouter();
 
   const newCaseFormSchema = z.object({
     description: z

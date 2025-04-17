@@ -85,30 +85,6 @@ const steps = [
   },
 ];
 
-const testimonials = [
-  {
-    name: "Sarah Johnson",
-    role: "CEO, TechStart Inc.",
-    content:
-      "UpCounsel Clone has been a game-changer for our startup. We got top-notch legal advice at a fraction of the cost of a traditional law firm.",
-    avatar: "SJ",
-  },
-  {
-    name: "Michael Chen",
-    role: "Founder, GreenEats",
-    content:
-      "The quality of attorneys on this platform is outstanding. They helped us navigate complex regulatory issues with ease.",
-    avatar: "MC",
-  },
-  {
-    name: "Emily Rodriguez",
-    role: "COO, FitTech Solutions",
-    content:
-      "I'm impressed by how quickly we were matched with a skilled attorney. Our contracts are now rock-solid thanks to their expertise.",
-    avatar: "ER",
-  },
-];
-
 export default function HomePage() {
   return (
     <div className="bg-gray-50 mx-auto px-4 sm:px-6 lg:px-8">

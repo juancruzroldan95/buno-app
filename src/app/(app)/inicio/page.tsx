@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAuthenticatedAppForUser } from "@/firebase/serverApp";
 import { getUserByUid } from "@/lib/users-actions";
-import ClientHomePage from "./ClientHomePage";
 import LawyerHomePage from "./LawyerHomePage";
 
 export default async function HomePage() {
@@ -12,5 +11,5 @@ export default async function HomePage() {
     redirect("/tus-casos");
   }
 
-  return <LawyerHomePage user={dbUser} />;
+  return <LawyerHomePage />;
 }

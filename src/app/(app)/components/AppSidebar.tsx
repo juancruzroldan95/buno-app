@@ -6,10 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { deleteCookie, setCookie } from "cookies-next";
 import {
-  BadgeCheck,
-  Bell,
   ChevronUp,
-  CreditCard,
   Home,
   Inbox,
   LogOut,
@@ -23,9 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {

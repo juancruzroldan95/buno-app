@@ -8,7 +8,6 @@ import {
   FileCheck,
   Star,
 } from "lucide-react";
-import { getAuthenticatedAppForUser } from "@/firebase/serverApp";
 import { SelectUser } from "@/db/schemas/users-schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -62,7 +61,7 @@ const calculateProfileProgress = () => {
   return (completed / Object.keys(profileCompletion).length) * 100;
 };
 
-export default function HomePage({ user }: { user: SelectUser }) {
+export default function HomePage() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-12 lg:px-8">
       <div className="flex justify-between items-center mb-8">

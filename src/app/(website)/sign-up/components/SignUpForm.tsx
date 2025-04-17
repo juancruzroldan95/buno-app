@@ -54,7 +54,7 @@ export default function SignUpForm() {
     },
   });
 
-  async function handleSignUp(values: z.infer<typeof formSchema>) {
+  async function handleSignUp() {
     try {
       setIsSignUpLoading(true);
       // const { authToken, user } = await register(values);
