@@ -8,7 +8,6 @@ import { deleteCookie, setCookie } from "cookies-next";
 import {
   BadgeCheck,
   Bell,
-  Calendar,
   ChevronUp,
   CreditCard,
   Home,
@@ -16,9 +15,6 @@ import {
   LogOut,
   ScrollText,
   Search,
-  Settings,
-  Sparkles,
-  User2,
   UserPen,
 } from "lucide-react";
 import { onIdTokenChanged, signOut } from "@/firebase/auth";
@@ -29,7 +25,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -46,7 +41,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-// Menu items.
 const lawyerItems = [
   {
     title: "Inicio",
@@ -55,7 +49,7 @@ const lawyerItems = [
   },
   {
     title: "Buscar casos",
-    url: "/casos",
+    url: "/buscar-casos",
     icon: Search,
   },
   {
@@ -68,24 +62,9 @@ const lawyerItems = [
     url: "/perfil",
     icon: UserPen,
   },
-  // {
-  //   title: "Calendario",
-  //   url: "#",
-  //   icon: Calendar,
-  // },
-  // {
-  //   title: "Ajustes",
-  //   url: "#",
-  //   icon: Settings,
-  // },
 ];
 
 const clientItems = [
-  // {
-  //   title: "Inicio",
-  //   url: "/inicio",
-  //   icon: Home,
-  // },
   {
     title: "Tus casos",
     url: "/tus-casos",
@@ -194,7 +173,7 @@ export default function AppSidebar({
                 side="top"
                 className="w-[--radix-popper-anchor-width]"
               >
-                <DropdownMenuGroup>
+                {/* <DropdownMenuGroup>
                   <DropdownMenuItem>
                     <BadgeCheck className="w-4 h-4 mr-1.5" />
                     Mi cuenta
@@ -208,7 +187,7 @@ export default function AppSidebar({
                     Notificaciones
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator /> */}
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="w-4 h-4 mr-1.5" />
                   Cerrar sesión
