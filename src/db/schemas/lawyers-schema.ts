@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { integer, numeric, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import {
+  date,
+  integer,
+  numeric,
+  pgTable,
+  text,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { bidsTable } from "./bids-schema";
 import { timestamps } from "./columns-helpers";
 import { educationsTable } from "./educations-schema";
@@ -23,7 +30,7 @@ export const lawyersTable = pgTable("lawyers_table", {
   bio: text("bio"),
   jurisdiction: text("jurisdiction"),
   documentNumer: text("document_number"),
-  birthDate: text("birth_date"),
+  birthDate: date("birth_date", { mode: "date" }),
   lawyerSchool: text("lawyer_school"),
   licenseNumber: text("license_number"),
   verifiedStatus: verifiedStatusEnum("verified_status")

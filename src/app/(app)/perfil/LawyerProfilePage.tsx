@@ -3,7 +3,9 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { getAllEducations } from "@/lib/educations-actions";
 import { getAllExperiences } from "@/lib/experiences-actions";
+import { getAllLawAreas } from "@/lib/law-areas-actions";
 import { getLawyerByUserId } from "@/lib/lawyers-actions";
+import { getAllProvinces } from "@/lib/provinces-actions";
 import { SelectUser } from "@/db/schemas/users-schema";
 import {
   Card,
@@ -28,6 +30,8 @@ export default async function LawyerProfilePage({
 }) {
   const lawyerData = await getLawyerByUserId(user.uid);
 
+  const provincesData = await getAllProvinces();
+  const lawAreasData = await getAllLawAreas();
   const experiences = await getAllExperiences(lawyerData.lawyerId);
   const educations = await getAllEducations(lawyerData.lawyerId);
 
@@ -78,7 +82,11 @@ export default async function LawyerProfilePage({
                   </div>
                 </div>
 
-                <PersonalLawyerForm initialData={lawyerData} />
+                <PersonalLawyerForm
+                  initialData={lawyerData}
+                  provinces={provincesData}
+                  lawAreas={lawAreasData}
+                />
               </CardContent>
             </Card>
           </TabsContent>

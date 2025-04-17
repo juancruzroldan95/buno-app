@@ -3,6 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { LawAreaSelector, ProvinceSelector } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -30,9 +31,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-type ProvinceSelector = Pick<SelectProvince, "provinceId" | "provinceLabel">;
-type LawAreaSelector = Pick<SelectLawArea, "lawAreaId" | "lawAreaLabel">;
-
 interface NewCaseFormProps {
   clientId: string;
   provinces: ProvinceSelector[];
@@ -40,7 +38,7 @@ interface NewCaseFormProps {
   setOpen: (open: boolean) => void;
 }
 
-export default function newCaseForm({
+export default function NewCaseForm({
   clientId,
   lawAreas,
   provinces,

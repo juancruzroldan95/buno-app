@@ -104,10 +104,8 @@ function useUserSession(initialUser: SelectUser) {
       if (user) {
         const idToken = await user.getIdToken();
         await setCookie("__session", idToken);
-        console.log("cookie seteada en useUserSession");
       } else {
         await deleteCookie("__session");
-        console.log("cookie borrada en useUserSession");
       }
       if (initialUser?.uid === user?.uid) {
         return;
