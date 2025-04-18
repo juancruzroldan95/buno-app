@@ -103,7 +103,7 @@ export default function SignUpForm() {
 
   return (
     <Card>
-      <CardContent className="pt-6">
+      <CardContent>
         <div className="mb-6">
           <div className="mb-6">
             <div className="flex gap-3">

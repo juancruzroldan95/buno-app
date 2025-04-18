@@ -34,14 +34,15 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 const lawyerItems = [
-  {
-    title: "Inicio",
-    url: "/inicio",
-    icon: Home,
-  },
+  // {
+  //   title: "Inicio",
+  //   url: "/inicio",
+  //   icon: Home,
+  // },
   {
     title: "Buscar casos",
     url: "/buscar-casos",
@@ -98,6 +99,7 @@ export default function AppSidebar({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const { isMobile, toggleSidebar } = useSidebar();
 
   const user = useUserSession(initialUser);
 
@@ -109,6 +111,10 @@ export default function AppSidebar({
     } catch (error) {
       console.error("Error signing out", error);
     }
+  }
+
+  function handleSidebarToggle() {
+    if (isMobile) toggleSidebar();
   }
 
   return (
@@ -130,7 +136,7 @@ export default function AppSidebar({
               {(user?.roleId === 1 ? lawyerItems : clientItems).map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={pathname === item.url}>
-                    <Link href={item.url}>
+                    <Link href={item.url} onClick={handleSidebarToggle}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>

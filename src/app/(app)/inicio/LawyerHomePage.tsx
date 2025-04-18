@@ -71,10 +71,6 @@ export default function HomePage() {
             Acá encontras un resumen de tus trabajos y tu perfil.
           </p>
         </div>
-        <Button>
-          <FileCheck className="mr-2 h-4 w-4" />
-          Nuevo caso
-        </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">

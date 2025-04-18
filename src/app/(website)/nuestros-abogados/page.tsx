@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { Briefcase } from "lucide-react";
+import { BriefcaseBusiness } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function OurLawyersPage() {
   return (
     <div className="my-16 flex flex-col items-center justify-center text-center p-4">
-      <Briefcase className="w-16 h-16 text-blue-600 mb-4" />
+      <BriefcaseBusiness className="w-16 h-16 text-blue-600 mb-4" />
       <h1 className="text-2xl md:text-3xl font-semibold mb-2">
         Nuestros abogados
       </h1>

@@ -9,6 +9,8 @@ export default async function HomePage() {
 
   if (dbUser.roleId === 2) {
     redirect("/tus-casos");
+  } else {
+    redirect("/perfil");
   }
 
   return <LawyerHomePage />;
