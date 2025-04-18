@@ -87,11 +87,11 @@ const steps = [
 
 export default function HomePage() {
   return (
-    <div className="bg-gray-50 mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-50 mx-auto">
       {/* Hero */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden pt-10">
         <div className="max-w-7xl mx-auto">
-          <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 bg-gray-50 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
+          <div className="relative z-10 pb-12 bg-gray-50 lg:max-w-2xl lg:w-full">
             <svg
               className="hidden lg:block absolute right-0 inset-y-0 h-full w-48 text-gray-50 transform translate-x-1/2"
               fill="currentColor"
@@ -102,7 +102,7 @@ export default function HomePage() {
               <polygon points="50,0 100,0 50,100 0,100" />
             </svg>
 
-            <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="text-center lg:text-left">
                 <h1 className="text-3xl tracking-tight font-extrabold text-gray-900 md:text-4xl lg:text-5xl">
                   <span className="block xl:inline">Encontrá a tu abogado</span>{" "}
@@ -139,7 +139,7 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-            </main>
+            </div>
           </div>
           <div className="hidden lg:block lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
             <Image
