@@ -91,7 +91,7 @@ export default function LoginForm() {
   }
 
   return (
-    <Card>
+    <Card className="mx-2 md:mx-0">
       <CardContent className="pt-6">
         <div className="mb-6">
           <div className="mb-6">

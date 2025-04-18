@@ -102,7 +102,7 @@ export default function SignUpForm() {
   }
 
   return (
-    <Card>
+    <Card className="mx-2 md:mx-0">
       <CardContent>
         <div className="mb-6">
           <div className="mb-6">
