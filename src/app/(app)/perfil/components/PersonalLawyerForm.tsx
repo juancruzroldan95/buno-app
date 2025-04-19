@@ -90,7 +90,24 @@ export default function PersonalLawyerForm({
       .url("URL de LinkedIn inválida")
       .optional()
       .or(z.literal("")),
-    website: z.string().url("Página web inválida").optional().or(z.literal("")),
+    website: z
+      .string()
+      .optional()
+      .or(z.literal(""))
+      .refine(
+        (val) => {
+          if (!val) return true;
+          try {
+            new URL(val.startsWith("http") ? val : `https://${val}`);
+            return true;
+          } catch {
+            return false;
+          }
+        },
+        {
+          message: "Página web inválida",
+        }
+      ),
   });
 
   const lawyerProfileForm = useForm<z.infer<typeof lawyerProfileFormSchema>>({
@@ -426,7 +443,7 @@ export default function PersonalLawyerForm({
               <FormItem>
                 <FormLabel className="text-base">Perfil de LinkedIn</FormLabel>
                 <FormControl>
-                  <Input {...field} type="url" />
+                  <Input {...field} type="text" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -439,7 +456,7 @@ export default function PersonalLawyerForm({
               <FormItem>
                 <FormLabel className="text-base">Página web</FormLabel>
                 <FormControl>
-                  <Input {...field} type="url" />
+                  <Input {...field} type="text" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
