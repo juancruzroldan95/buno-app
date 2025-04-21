@@ -11,9 +11,9 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const links = [
+    { href: "/para-clientes", label: "Para clientes" },
     { href: "/para-abogados", label: "Para abogados" },
     { href: "/nuestros-abogados", label: "Nuestros abogados" },
-    { href: "/sobre-nosotros", label: "¿Quiénes somos?" },
   ];
 
   return (
@@ -33,7 +33,7 @@ export default function Navbar() {
         </Link>
         <div className="flex items-center md:order-2 space-x-3 md:space-x-4 rtl:space-x-reverse">
           <Link href="/sign-up" onClick={() => setIsOpen(false)}>
-            <Button className="md:text-lg">Publicá tu caso</Button>
+            <Button className="md:text-lg">Comenzá ahora</Button>
           </Link>
           <Link
             href="/login"

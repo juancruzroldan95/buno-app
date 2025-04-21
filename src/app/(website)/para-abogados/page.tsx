@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { Briefcase, CheckCircle, FileCheck, Users } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  CheckCircle,
+  HandCoins,
+  Network,
+  Users,
+  Watch,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,12 +25,12 @@ const benefits = [
   {
     title: "Flexibilidad",
     description: "Trabajá según tu propio horario desde cualquier lugar.",
-    icon: Briefcase,
+    icon: Watch,
   },
   {
     title: "Mayores ganancias",
     description: "Aumentá tus ingresos con tarifas competitivas.",
-    icon: FileCheck,
+    icon: HandCoins,
   },
   {
     title: "Proceso simplificado",
@@ -33,19 +40,20 @@ const benefits = [
   {
     title: "Networking",
     description: "Conectá con otros abogados profesionales.",
-    icon: Users,
+    icon: Network,
   },
   {
     title: "Crecimiento Profesional",
     description: "Accedé a recursos para el aprendizaje continuo.",
-    icon: Briefcase,
+    icon: BriefcaseBusiness,
   },
 ];
 
 const steps = [
   {
     title: "Aplicá como abogado",
-    description: "Enviá tu solicitud y credenciales para su revisión.",
+    description:
+      "Completá tu perfil profesional y matrículas para su revisión.",
   },
   {
     title: "Aprobá tu perfil",
@@ -62,6 +70,7 @@ const steps = [
 export default function ForLawyersPage() {
   return (
     <div className="bg-gray-50 mx-auto">
+      {/* Hero */}
       <section
         id="hero-for-lawyers"
         className="py-12 flex flex-col justify-center items-center"
@@ -76,7 +85,7 @@ export default function ForLawyersPage() {
           </p>
           <div className="mt-5 flex justify-center">
             <Link href="/sign-up">
-              <Button size="lg" className="text-2xl font-bold">
+              <Button className="px-4 py-2 text-xl md:px-6 md:py-4 md:text-2xl font-bold">
                 Aplicá como abogado
               </Button>
             </Link>
@@ -86,7 +95,7 @@ export default function ForLawyersPage() {
 
       <section className="py-12 bg-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-extrabold text-slate-900 mb-8">
+          <h2 className="text-3xl font-extrabold text-slate-900 mb-8 lg:text-center">
             ¿Por qué unirse a Buno?
           </h2>
           <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -94,7 +103,7 @@ export default function ForLawyersPage() {
               <Card key={index}>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    {<benefit.icon className="h-6 w-6 text-indigo-500 mr-2" />}
+                    {<benefit.icon className="h-6 w-6 text-primary mr-2" />}
                     {benefit.title}
                   </CardTitle>
                 </CardHeader>
@@ -109,7 +118,7 @@ export default function ForLawyersPage() {
 
       <section className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-extrabold text-slate-900 mb-8">
+          <h2 className="text-3xl font-extrabold text-slate-900 mb-8 lg:text-center">
             ¿Cómo funciona?
           </h2>
           <div className="mt-10">
@@ -117,7 +126,7 @@ export default function ForLawyersPage() {
               {steps.map((step, index) => (
                 <Card key={step.title}>
                   <CardHeader>
-                    <CardTitle className="mt-2 text-xl">
+                    <CardTitle className="mt-2">
                       <span className="text-primary mr-2">{index + 1}.</span>
                       {step.title}
                     </CardTitle>

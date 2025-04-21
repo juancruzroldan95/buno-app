@@ -71,7 +71,7 @@ export default function Footer() {
                 <ul className="mt-4 space-y-4">
                   <li>
                     <Link
-                      href="/"
+                      href="/sobre-nosotros"
                       className="text-base text-gray-300 hover:text-gray-200"
                     >
                       Sobre nosotros
