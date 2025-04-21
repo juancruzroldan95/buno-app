@@ -1,13 +1,13 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { LawAreaSelector, ProvinceSelector } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { generateCaseSummary } from "@/lib/ai/generate-case-summary";
 import { createCase } from "@/lib/cases-actions";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
@@ -42,6 +42,8 @@ export default function NewCaseForm({
   setOpen,
 }: NewCaseFormProps) {
   const { toast } = useToast();
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedTitle, setGeneratedTitle] = useState("");
 
   const newCaseFormSchema = z.object({
     description: z
@@ -62,8 +64,35 @@ export default function NewCaseForm({
     },
   });
 
+  async function handleGenerate() {
+    const currentText = newCaseForm.getValues("description");
+
+    try {
+      setIsGenerating(true);
+      const { title, description } = await generateCaseSummary(currentText);
+      setGeneratedTitle(title);
+      newCaseForm.setValue("description", description);
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Error al usar la IA",
+        description: "Hubo un problema al generar la descripción.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  }
+
   async function onNewCaseSubmit(data: z.infer<typeof newCaseFormSchema>) {
     try {
+      const { title, description } = await generateCaseSummary(
+        data.description
+      );
+      console.log("Generated title:", title);
+      console.log("Generated description:", description);
+
+      return;
       const response = await createCase({ ...data, clientId: clientId });
       console.log({ response });
       toast({
@@ -93,19 +122,47 @@ export default function NewCaseForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel></FormLabel>
+              <FormLabel>Contanos qué te pasó</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder=""
+                  placeholder="Escribí tu situación legal con tus palabras"
                   className="resize-none h-32"
                   {...field}
                 />
               </FormControl>
               <FormMessage />
+              <div className="mt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                >
+                  {isGenerating
+                    ? "Generando descripción..."
+                    : "Generar descripción ✨"}
+                </Button>
+                {isGenerating && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    ✨ Generando resumen con IA...
+                  </p>
+                )}
+              </div>
             </FormItem>
           )}
         />
-        <div className="text-sm text-muted-foreground">
+
+        {generatedTitle && (
+          <div className="text-sm text-muted-foreground border rounded-md p-3 bg-muted">
+            <strong className="block text-primary mb-1">
+              Título sugerido:
+            </strong>
+            {generatedTitle}
+          </div>
+        )}
+
+        {/* <div className="text-sm text-muted-foreground">
           Una buena descripción incluye:
           <ul className="list-disc pl-4">
             <li>Detalles únicos sobre su proyecto o necesidades legales.</li>
@@ -113,7 +170,7 @@ export default function NewCaseForm({
             <li>Sus expectativas presupuestarias.</li>
             <li>Experiencia legal específica que necesita.</li>
           </ul>
-        </div>
+        </div> */}
         <FormField
           control={newCaseForm.control}
           name="provinceId"
