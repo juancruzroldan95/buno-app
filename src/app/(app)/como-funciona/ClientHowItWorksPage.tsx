@@ -11,9 +11,7 @@ export default function ClientHowItWorksPage() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-6 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">
-          ¿Cómo funciona para los clientes?
-        </h1>
+        <h1 className="text-3xl font-bold">¿Cómo funciona?</h1>
         <p className="text-gray-500">
           Seguí estos pasos para obtener asistencia legal de forma simple.
         </p>
@@ -27,7 +25,7 @@ export default function ClientHowItWorksPage() {
               <h3 className="text-lg font-semibold">Paso 1: Publicá tu caso</h3>
             </div>
             <p className="text-muted-foreground">
-              Desde <strong>Menú {">"} Tus casos</strong>, vas a poder contanos
+              Desde <strong>Menú {">"} Tus casos</strong>, vas a poder contarnos
               sobre tu necesidad legal con tus propias palabras. No te preocupes
               por escribir una descripción técnica o detallada. La IA de Buno te
               ayudará a transformar lo que escribas en una descripción adecuada

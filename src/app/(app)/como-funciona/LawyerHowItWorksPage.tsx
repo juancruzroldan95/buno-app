@@ -11,9 +11,7 @@ export default function LawyerHowItWorksPage() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-6 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">
-          ¿Cómo funciona para los abogados?
-        </h1>
+        <h1 className="text-3xl font-bold">¿Cómo funciona?</h1>
         <p className="text-gray-500">
           Seguí estos pasos para empezar a trabajar con Buno.
         </p>
