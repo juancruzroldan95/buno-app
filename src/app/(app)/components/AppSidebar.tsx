@@ -8,6 +8,7 @@ import { deleteCookie, setCookie } from "cookies-next";
 import {
   ChevronUp,
   Inbox,
+  Info,
   LogOut,
   ScrollText,
   Search,
@@ -52,6 +53,11 @@ const lawyerItems = [
     url: "/perfil",
     icon: UserPen,
   },
+  {
+    title: "Cómo funciona",
+    url: "/como-funciona",
+    icon: Info,
+  },
 ];
 
 const clientItems = [
@@ -64,6 +70,11 @@ const clientItems = [
     title: "Mi perfil",
     url: "/perfil",
     icon: UserPen,
+  },
+  {
+    title: "Cómo funciona",
+    url: "/como-funciona",
+    icon: Info,
   },
 ];
 
