@@ -27,12 +27,13 @@ export default function ClientHowItWorksPage() {
               <h3 className="text-lg font-semibold">Paso 1: Publicá tu caso</h3>
             </div>
             <p className="text-muted-foreground">
-              Contanos sobre tu necesidad legal con tus propias palabras. No te
-              preocupes por escribir una descripción técnica o detallada. La IA
-              de Buno te ayudará a transformar lo que escribas en una
-              descripción adecuada para tu caso. Solo te lleva un minuto y tu
-              información es estrictamente confidencial. Una vez publicado, tu
-              caso será visible para los abogados calificados.
+              Desde <strong>Menú {">"} Tus casos</strong>, vas a poder contanos
+              sobre tu necesidad legal con tus propias palabras. No te preocupes
+              por escribir una descripción técnica o detallada. La IA de Buno te
+              ayudará a transformar lo que escribas en una descripción adecuada
+              para tu caso. Solo te lleva un minuto y tu información es
+              estrictamente confidencial. Una vez publicado, tu caso será
+              visible para los abogados calificados.
             </p>
           </CardContent>
         </Card>
@@ -47,7 +48,12 @@ export default function ClientHowItWorksPage() {
             </div>
             <p className="text-muted-foreground">
               Recibirás propuestas de abogados que estén interesados en tu caso.
-              Podrás consultarles de manera gratuita antes de decidirte.
+              Podrás consultarles de manera gratuita antes de decidirte. Desde{" "}
+              <strong>Menú {">"} Tus Casos</strong>, vas a poder ver todos tus
+              casos creados y darle seguimiento. Además, podrás ver cuántas
+              propuestas tiene cada uno de tus casos. Para ver más detalles
+              sobre una propuesta, solo tenés que hacer clic en el caso
+              correspondiente.
             </p>
           </CardContent>
         </Card>
