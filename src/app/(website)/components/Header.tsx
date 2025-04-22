@@ -18,7 +18,7 @@ export default function Navbar() {
 
   return (
     <header className="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200">
-      <nav className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <nav className="max-w-screen-xl flex flex-nowrap items-center justify-between mx-auto p-4 text-center">
         <Link
           href="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
@@ -33,7 +33,7 @@ export default function Navbar() {
         </Link>
         <div className="flex items-center md:order-2 space-x-3 md:space-x-4 rtl:space-x-reverse">
           <Link href="/sign-up" onClick={() => setIsOpen(false)}>
-            <Button className="md:text-lg">Comenzá ahora</Button>
+            <Button className="h-9 rounded-md px-3">Comenzá ahora</Button>
           </Link>
           <Link
             href="/login"
@@ -72,10 +72,12 @@ export default function Navbar() {
           } items-center justify-between w-full md:flex md:w-auto md:order-1`}
         >
           <ul className="flex flex-col w-full p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
-            <Link href="/login" onClick={() => setIsOpen(false)}>
-              <Button className="w-full md:hidden">Iniciar sesión</Button>
-            </Link>
-            <div className="mt-4 mb-2 w-full md:hidden h-[1px] bg-gray-200" />
+            <li className="md:hidden">
+              <Link href="/login" onClick={() => setIsOpen(false)}>
+                <Button className="w-full">Iniciar sesión</Button>
+              </Link>
+            </li>
+            <li className="mt-4 mb-2 w-full md:hidden h-[1px] bg-gray-200" />
             {links.map(({ href, label }) => (
               <li key={href}>
                 <Link
@@ -83,7 +85,7 @@ export default function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className={`block py-2 px-3 rounded md:p-0 ${
                     pathname === href
-                      ? "text-blue-700 md:text-blue-700"
+                      ? "text-blue-700"
                       : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700"
                   }`}
                 >

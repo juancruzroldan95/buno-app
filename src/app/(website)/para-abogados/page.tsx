@@ -75,9 +75,9 @@ export default function ForLawyersPage() {
         id="hero-for-lawyers"
         className="py-12 flex flex-col justify-center items-center"
       >
-        <div className="lg:w-1/2 px-4">
-          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-slate-900 text-center md:text-5xl lg:text-6xl dark:text-white">
-            <strong>Crecé profesionalmente</strong>
+        <div className="md:w-2/3 lg:w-1/2 px-4">
+          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-slate-900 text-center md:text-5xl lg:text-6xl">
+            Crecé profesionalmente
           </h1>
           <p className="text-xl mt-5 text-center text-slate-500">
             Unite a la mejor comunidad de abogados de Buenos Aires, aumentá tu

@@ -7,7 +7,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { deleteCookie, setCookie } from "cookies-next";
 import {
   ChevronUp,
-  Home,
   Inbox,
   LogOut,
   ScrollText,
@@ -38,11 +37,6 @@ import {
 } from "@/components/ui/sidebar";
 
 const lawyerItems = [
-  // {
-  //   title: "Inicio",
-  //   url: "/inicio",
-  //   icon: Home,
-  // },
   {
     title: "Buscar casos",
     url: "/buscar-casos",

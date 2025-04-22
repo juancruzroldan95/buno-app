@@ -93,8 +93,8 @@ export default function ForClientsPage() {
         id="hero-for-lawyers"
         className="py-12 flex flex-col justify-center items-center"
       >
-        <div className="lg:w-1/2 px-4">
-          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-slate-900 text-center md:text-5xl lg:text-6xl dark:text-white">
+        <div className="md:w-2/3 lg:w-1/2 px-4">
+          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-slate-900 text-center md:text-5xl lg:text-6xl">
             Encontrá a tu abogado{" "}
             <span className="text-primary">de confianza</span>
           </h1>

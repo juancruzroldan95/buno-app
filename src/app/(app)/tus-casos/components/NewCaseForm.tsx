@@ -46,6 +46,10 @@ export default function NewCaseForm({
   const [generatedTitle, setGeneratedTitle] = useState("");
 
   const newCaseFormSchema = z.object({
+    title: z.string({
+      required_error:
+        "Hacé clic en 'Generar descripción ✨' antes de continuar",
+    }),
     description: z
       .string({ required_error: "La descripción es obligatoria" })
       .min(50, "La descripción debe tener al menos 50 caracteres"),
@@ -67,11 +71,25 @@ export default function NewCaseForm({
   async function handleGenerate() {
     const currentText = newCaseForm.getValues("description");
 
+    if (currentText.length < 50) {
+      newCaseForm.setError("description", {
+        type: "manual",
+        message: "La descripción debe tener al menos 50 caracteres",
+      });
+      return;
+    }
+
+    newCaseForm.clearErrors("title");
+    newCaseForm.clearErrors("description");
+
     try {
       setIsGenerating(true);
-      const { title, description } = await generateCaseSummary(currentText);
+      const { title, description, lawAreaId } =
+        await generateCaseSummary(currentText);
       setGeneratedTitle(title);
+      newCaseForm.setValue("title", title);
       newCaseForm.setValue("description", description);
+      newCaseForm.setValue("lawAreaId", lawAreaId);
     } catch (err) {
       console.error(err);
       toast({
@@ -86,15 +104,7 @@ export default function NewCaseForm({
 
   async function onNewCaseSubmit(data: z.infer<typeof newCaseFormSchema>) {
     try {
-      const { title, description } = await generateCaseSummary(
-        data.description
-      );
-      console.log("Generated title:", title);
-      console.log("Generated description:", description);
-
-      return;
-      const response = await createCase({ ...data, clientId: clientId });
-      console.log({ response });
+      await createCase({ ...data, clientId: clientId });
       toast({
         title: "Caso publicado",
         description: "Tu caso ha sido publicado con éxito.",
@@ -161,16 +171,16 @@ export default function NewCaseForm({
             {generatedTitle}
           </div>
         )}
-
-        {/* <div className="text-sm text-muted-foreground">
-          Una buena descripción incluye:
-          <ul className="list-disc pl-4">
-            <li>Detalles únicos sobre su proyecto o necesidades legales.</li>
-            <li>Cronograma del proyecto y entregables esperados.</li>
-            <li>Sus expectativas presupuestarias.</li>
-            <li>Experiencia legal específica que necesita.</li>
-          </ul>
-        </div> */}
+        <FormField
+          control={newCaseForm.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl></FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={newCaseForm.control}
           name="provinceId"
@@ -211,7 +221,7 @@ export default function NewCaseForm({
                 <FormLabel className="w-1/4 mr-2">Área legal</FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
-                  defaultValue={field.value?.toString()}
+                  value={field.value?.toString()}
                 >
                   <FormControl className="w-3/4">
                     <SelectTrigger>

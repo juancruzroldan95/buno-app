@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BriefcaseBusiness, Handshake, Scale, Search } from "lucide-react";
+import { Handshake, Scale, ScrollText, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,7 +34,7 @@ export default function HomePage() {
                     con <span className="text-primary">abogados reales</span>
                   </span>
                 </h1>
-                <p className="mt-4 text-base text-gray-600 sm:mt-6 sm:text-xl sm:max-w-xl sm:mx-auto lg:mx-0">
+                <p className="mt-4 text-xl text-gray-600 lg:mt-6 md:max-w-xl mx-auto lg:mx-0">
                   Buno es una herramienta que te permite contratar y ser
                   contratado. Una nueva forma de encontrar abogados o conseguir
                   nuevos casos legales.
@@ -96,7 +96,7 @@ export default function HomePage() {
           <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2">
             <Card>
               <CardHeader className="flex flex-row items-center gap-4">
-                <BriefcaseBusiness className="h-10 w-10 text-primary" />
+                <ScrollText className="h-10 w-10 text-primary" />
                 <div>
                   <CardTitle className="text-xl">Para clientes</CardTitle>
                   <CardDescription>
