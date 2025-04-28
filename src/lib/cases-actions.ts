@@ -47,8 +47,26 @@ async function getCaseById(caseId: SelectCase["caseId"]) {
   }
 
   const result = await db
-    .select()
+    .select({
+      caseId: casesTable.caseId,
+      title: casesTable.title,
+      description: casesTable.description,
+      lawAreaId: casesTable.lawAreaId,
+      lawAreaLabel: lawAreasCatalog.lawAreaLabel,
+      provinceId: casesTable.provinceId,
+      provinceLabel: provincesCatalog.provinceLabel,
+      status: casesTable.status,
+      createdAt: casesTable.createdAt,
+    })
     .from(casesTable)
+    .leftJoin(
+      lawAreasCatalog,
+      eq(casesTable.lawAreaId, lawAreasCatalog.lawAreaId)
+    )
+    .leftJoin(
+      provincesCatalog,
+      eq(casesTable.provinceId, provincesCatalog.provinceId)
+    )
     .where(and(eq(casesTable.caseId, caseId), eq(casesTable.isDeleted, false)));
 
   if (result.length === 0) {

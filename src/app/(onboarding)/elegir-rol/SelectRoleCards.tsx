@@ -36,7 +36,7 @@ export function SelectRoleCards({ user }: { user: SelectUser }) {
         });
       }
 
-      router.push("/inicio");
+      router.push("/como-funciona");
     } catch (error) {
       console.error("Error setting role:", error);
       toast({

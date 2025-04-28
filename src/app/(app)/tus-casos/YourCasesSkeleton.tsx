@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function SkeletonClientCases() {
+export default function YourCasesSkeleton() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-6 space-y-8">
       <div className="md:flex md:items-center md:justify-between">

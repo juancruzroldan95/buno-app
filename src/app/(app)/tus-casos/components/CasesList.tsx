@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { GetCase } from "@/types";
-import { ArrowUpRight, FolderCheck, FolderOpen, Scale } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { getRelativeTime } from "@/utils/utils";
+import { ArrowUpRight, Calendar, Scale } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -51,35 +51,30 @@ export function CasesList({ cases }: CasesListProps) {
           ) : (
             filteredCases.map((c) => (
               <Link
-                href={`/caso/${c.caseId}`}
+                href={`/tus-casos/${c.caseId}`}
                 key={c.caseId}
-                className="flex justify-between items-center p-4 border rounded-lg hover:bg-accent transition-colors"
+                className="flex flex-row justify-between p-4 border rounded-lg hover:bg-accent transition-colors"
               >
-                <div>
-                  <div className="font-medium">{c.title}</div>
-                  <div className="text-sm text-muted-foreground flex items-center gap-2 mt-1">
+                <div className="w-full">
+                  <div className="flex flex-row justify-between font-medium text-base md:text-lg">
+                    {c.title}
+                    <ArrowUpRight className="hidden md:block w-4 h-4 text-muted-foreground" />
+                  </div>
+                  <div className="text-sm text-muted-foreground flex flex-col md:flex-row flex-wrap gap-2 mt-1">
                     <span className="flex items-center gap-1">
-                      <Scale className="w-4 h-4 text-muted-foreground" />
+                      <Scale className="size-3 md:size-4" />
                       {c.lawAreaLabel}
                     </span>
-                    <span className="text-muted-foreground">•</span>
-                    <span>
-                      Publicado el{" "}
-                      {new Date(c.createdAt).toLocaleDateString("es-AR")}
+                    <span className="hidden md:block text-muted-foreground">
+                      •
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="size-3 md:size-4" />
+                      {getRelativeTime(new Date(c.createdAt))}
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <Badge variant={filter === "open" ? "default" : "secondary"}>
-                    {filter === "open" ? (
-                      <FolderOpen className="w-4 h-4 mr-1" />
-                    ) : (
-                      <FolderCheck className="w-4 h-4 mr-1" />
-                    )}
-                    {filter === "open" ? "Abierto" : "Cerrado"}
-                  </Badge>
-                  <ArrowUpRight className="w-4 h-4 text-muted-foreground" />
-                </div>
+                <div className="flex items-center justify-between"></div>
               </Link>
             ))
           )}

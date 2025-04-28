@@ -1,5 +1,5 @@
 import SkeletonProfilePage from "./SkeletonProfilePage";
 
-export default function ProfilePageLoading() {
+export default function ProfileLoading() {
   return <SkeletonProfilePage />;
 }

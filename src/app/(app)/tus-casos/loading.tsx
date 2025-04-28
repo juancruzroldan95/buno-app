@@ -1,5 +1,5 @@
-import SkeletonClientCases from "./SkeletonClientPage";
+import YourCasesSkeleton from "./YourCasesSkeleton";
 
-export default function YourCasesPageLoading() {
-  return <SkeletonClientCases />;
+export default function YourCasesLoading() {
+  return <YourCasesSkeleton />;
 }
