@@ -42,7 +42,7 @@ async function getEducationById(id: SelectEducation["educationId"]) {
 }
 
 async function createEducation(data: InsertEducation) {
-  const result = await db.insert(educationsTable).values(data);
+  const result = await db.insert(educationsTable).values(data).returning();
 
   revalidatePath("/profile");
   return result;

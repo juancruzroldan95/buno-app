@@ -45,10 +45,12 @@ export default function ExperienceForm({
   const experienceFormSchema = z.object({
     company: z
       .string({ required_error: "El nombre de la empresa es obligatorio" })
-      .min(2, "Debe tener al menos 2 caracteres"),
+      .min(2, "Debe tener al menos 2 caracteres")
+      .max(30, "No puede tener más de 30 caracteres"),
     position: z
       .string({ required_error: "La posición es obligatoria" })
-      .min(2, "Debe tener al menos 2 caracteres"),
+      .min(2, "Debe tener al menos 2 caracteres")
+      .max(30, "No puede tener más de 30 caracteres"),
     startDate: z.date({
       required_error: "La fecha de inicio es obligatoria",
     }),
@@ -124,7 +126,7 @@ export default function ExperienceForm({
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-4 md:grid md:grid-cols-2 md:gap-x-4 md:gap-y-0 md:space-y-0">
           <FormField
             control={experienceForm.control}
             name="startDate"

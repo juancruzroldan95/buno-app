@@ -44,7 +44,7 @@ const lawyerItems = [
     icon: Search,
   },
   {
-    title: "Mis trabajos",
+    title: "Mis casos",
     url: "/mis-casos",
     icon: Inbox,
   },

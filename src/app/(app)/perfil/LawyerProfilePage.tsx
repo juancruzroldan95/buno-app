@@ -1,6 +1,7 @@
 import ProfileAvatar from "@/app/(app)/components/ProfileAvatar";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { Building2, Calendar, GraduationCap, Landmark } from "lucide-react";
 import { getAllEducations } from "@/lib/educations-actions";
 import { getAllExperiences } from "@/lib/experiences-actions";
 import { getAllLawAreas } from "@/lib/law-areas-actions";
@@ -47,7 +48,10 @@ export default async function LawyerProfilePage({
       <div className="flex items-center justify-between">
         <Tabs defaultValue="personal" className="space-y-4 w-full">
           <TabsList className="w-full md:w-auto">
-            <TabsTrigger value="personal">Información Personal</TabsTrigger>
+            <TabsTrigger value="personal">
+              <span className="hidden sm:inline">Información Personal</span>
+              <span className="sm:hidden">Información</span>
+            </TabsTrigger>
             <TabsTrigger value="experience">
               <span className="hidden sm:inline">Experiencia profesional</span>
               <span className="sm:hidden">Experiencia</span>
@@ -112,11 +116,10 @@ export default async function LawyerProfilePage({
                     <Card key={exp.experienceId}>
                       <CardHeader>
                         <div className="flex justify-between items-start">
-                          <div>
-                            <CardTitle>{exp.position}</CardTitle>
-                            <CardDescription>{exp.company}</CardDescription>
-                          </div>
-                          <div>
+                          <CardTitle className="break-words overflow-hidden">
+                            {exp.position}
+                          </CardTitle>
+                          <div className="flex flex-col md:flex-row">
                             <UpdateExperienceModal
                               lawyerId={lawyerData.lawyerId}
                               experience={exp}
@@ -127,19 +130,26 @@ export default async function LawyerProfilePage({
                           </div>
                         </div>
                       </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-muted-foreground mb-2">
-                          {format(exp.startDate, "MMM yyyy", {
-                            locale: es,
-                          })}{" "}
-                          -{" "}
-                          {exp.endDate
-                            ? format(exp.endDate, "MMM yyyy", {
-                                locale: es,
-                              })
-                            : "Actualidad"}
-                        </p>
-                        <p className="text-sm">{exp.description}</p>
+                      <CardContent className="pt-0">
+                        <CardDescription className="break-words overflow-hidden">
+                          <div className="flex items-center">
+                            <Building2 className="size-4 mr-2" />
+                            {exp.company}
+                          </div>
+                          <div className="flex items-center">
+                            <Calendar className="size-4 mr-2" />
+                            {format(exp.startDate, "MMM yyyy", {
+                              locale: es,
+                            })}{" "}
+                            -{" "}
+                            {exp.endDate
+                              ? format(exp.endDate, "MMM yyyy", {
+                                  locale: es,
+                                })
+                              : "Actualidad"}
+                          </div>
+                          <p className="text-black mt-2">{exp.description}</p>
+                        </CardDescription>
                       </CardContent>
                     </Card>
                   ))}
@@ -170,11 +180,10 @@ export default async function LawyerProfilePage({
                     <Card key={edu.educationId}>
                       <CardHeader>
                         <div className="flex justify-between items-start">
-                          <div>
-                            <CardTitle>{edu.field}</CardTitle>
-                            <CardDescription>{edu.institution}</CardDescription>
-                          </div>
-                          <div>
+                          <CardTitle className="break-words overflow-hidden">
+                            {edu.field}
+                          </CardTitle>
+                          <div className="flex flex-col md:flex-row">
                             <UpdateEducationModal education={edu} />
                             <DeleteEducationModal
                               educationId={edu.educationId}
@@ -182,13 +191,19 @@ export default async function LawyerProfilePage({
                           </div>
                         </div>
                       </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-muted-foreground">
-                          Fecha de graduación:{" "}
-                          {format(edu.graduationDate, "MMMM yyyy", {
-                            locale: es,
-                          })}
-                        </p>
+                      <CardContent className="pt-0">
+                        <CardDescription className="break-words overflow-hidden">
+                          <div className="flex items-center">
+                            <Landmark className="size-4 mr-2" />
+                            {edu.institution}
+                          </div>
+                          <div className="flex items-center">
+                            <GraduationCap className="size-5 mr-2" />
+                            {format(edu.graduationDate, "MMMM yyyy", {
+                              locale: es,
+                            })}
+                          </div>
+                        </CardDescription>
                       </CardContent>
                     </Card>
                   ))}

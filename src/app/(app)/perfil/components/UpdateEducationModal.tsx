@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-
+import { Pencil } from "lucide-react";
+import { SelectEducation } from "@/db/schemas/educations-schema";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,9 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Pencil } from "lucide-react";
 import EducationForm from "./EducationForm";
-import { SelectEducation } from "@/db/schemas/educations-schema";
 
 export default function UpdateEducationModal({
   education,
@@ -26,7 +25,7 @@ export default function UpdateEducationModal({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon">
-          <Pencil className="h-4 w-4" />
+          <Pencil className="size-4" />
         </Button>
       </DialogTrigger>
       <DialogContent>

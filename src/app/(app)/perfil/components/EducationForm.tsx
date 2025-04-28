@@ -1,18 +1,18 @@
 "use client";
 
 import React from "react";
-
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { CalendarIcon, Loader2 } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/utils/utils";
-
-import { Calendar } from "@/components/ui/calendar";
+import { createEducation, updateEducation } from "@/lib/educations-actions";
+import { SelectEducation } from "@/db/schemas/educations-schema";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import { DialogFooter } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -21,16 +21,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { DialogFooter } from "@/components/ui/dialog";
-import { useToast } from "@/hooks/use-toast";
-
-import { createEducation, updateEducation } from "@/lib/educations-actions";
-import { SelectEducation } from "@/db/schemas/educations-schema";
 
 interface EducationFormProps {
   lawyerId?: string;
@@ -48,10 +44,12 @@ export default function EducationForm({
   const educationFormSchema = z.object({
     institution: z
       .string({ required_error: "Nombre de la institución es requerido" })
-      .min(2, "Debe tener al menos 2 caracteres"),
+      .min(2, "Debe tener al menos 2 caracteres")
+      .max(50, "No puede tener más de 50 caracteres"),
     field: z
       .string({ required_error: "El título es requerido" })
-      .min(2, "Debe tener al menos 2 caracteres"),
+      .min(2, "Debe tener al menos 2 caracteres")
+      .max(30, "No puede tener más de 30 caracteres"),
     graduationDate: z.date({
       required_error: "La fecha de graduación es requerida",
     }),

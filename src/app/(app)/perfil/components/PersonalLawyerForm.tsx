@@ -191,9 +191,9 @@ export default function PersonalLawyerForm({
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base">Email*</FormLabel>
+                <FormLabel className="text-base">Email</FormLabel>
                 <FormControl>
-                  <Input {...field} type="email" />
+                  <Input {...field} type="email" disabled />
                 </FormControl>
                 <FormMessage />
               </FormItem>
