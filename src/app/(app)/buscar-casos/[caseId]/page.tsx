@@ -8,17 +8,19 @@ import {
   PlusCircle,
   Scale,
 } from "lucide-react";
-import { getAllActiveCases, getCaseById } from "@/lib/cases-actions";
+import { getCaseById } from "@/lib/cases-actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export async function generateStaticParams() {
-  const cases = await getAllActiveCases();
+export const dynamic = "force-dynamic";
 
-  return cases.map((_case) => ({
-    caseId: _case.caseId,
-  }));
-}
+// export async function generateStaticParams() {
+//   const cases = await getAllActiveCases();
+
+//   return cases.map((_case) => ({
+//     caseId: _case.caseId,
+//   }));
+// }
 
 export default async function CaseDetailForLawyerPage({
   params,
