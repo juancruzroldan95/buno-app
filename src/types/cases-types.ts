@@ -1,6 +1,6 @@
 export type GetCase = {
   caseId: string;
-  title: string | null;
+  title: string;
   description: string;
   lawAreaId: number;
   lawAreaLabel: string | null;

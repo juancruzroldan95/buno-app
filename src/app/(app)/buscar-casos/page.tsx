@@ -1,24 +1,30 @@
-import { FolderSearch, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { getAllActiveCases } from "@/lib/cases-actions";
+import { getAllLawAreas } from "@/lib/law-areas-actions";
+import { getAllProvinces } from "@/lib/provinces-actions";
+import SearchCasesList from "./components/SearchCasesList";
 
-export default function SearchCasesPage() {
+export default async function SearchCasesPage() {
+  const allCases = await getAllActiveCases();
+  const provincesData = await getAllProvinces();
+  const lawAreasData = await getAllLawAreas();
+
   return (
-    <section className="max-w-4xl mx-auto px-4 py-20 text-center">
-      <div className="flex justify-center mb-6">
-        <Search className="h-12 w-12 text-blue-600" />
+    <div className="max-w-7xl mx-auto px-6 py-6 lg:px-8">
+      <div className="md:flex md:items-center md:justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold">Buscar casos</h1>
+          <p className="text-muted-foreground">
+            Explorá casos publicados por clientes y encontrá oportunidades para
+            enviar tu propuesta.
+          </p>
+        </div>
       </div>
-      <h1 className="text-3xl font-semibold mb-2">Buscar casos</h1>
-      <p className="text-muted-foreground mb-6">
-        Acá vas a encontrar casos publicados por clientes en busca de abogados.
-        Podés ver los detalles, filtrar por categoría y enviar tus propuestas.
-      </p>
-      <div className="flex flex-col items-center gap-4">
-        <FolderSearch className="h-10 w-10 text-gray-400" />
-        <p className="text-gray-500">Todavía no hay casos disponibles.</p>
-        <Button variant="outline" disabled>
-          Próximamente
-        </Button>
-      </div>
-    </section>
+
+      <SearchCasesList
+        cases={allCases}
+        provinces={provincesData}
+        lawAreas={lawAreasData}
+      />
+    </div>
   );
 }

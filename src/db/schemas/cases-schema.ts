@@ -10,7 +10,7 @@ import { reviewsTable } from "./reviews-schema";
 
 export const casesTable = pgTable("cases_table", {
   caseId: uuid("case_id").defaultRandom().primaryKey(),
-  title: text("title"),
+  title: text("title").notNull(),
   description: text("description").notNull(),
   lawAreaId: integer("law_area_id")
     .references(() => lawAreasCatalog.lawAreaId)

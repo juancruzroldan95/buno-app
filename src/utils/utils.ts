@@ -24,3 +24,16 @@ export function getRelativeTime(date: Date): string {
   const years = Math.floor(diffInDays / 365);
   return `Publicado hace ${years} ${years === 1 ? "año" : "años"}`;
 }
+
+export const lawAreaColors: Record<number, string> = {
+  1: "bg-yellow-100 text-yellow-800", // Despidos y Accidentes Laborales
+  2: "bg-green-100 text-green-800", // Contratos
+  3: "bg-pink-100 text-pink-800", // Divorcios
+  4: "bg-indigo-100 text-indigo-800", // Marcas y Patentes
+  5: "bg-red-100 text-red-800", // Siniestros
+  6: "bg-gray-200 text-gray-900", // Penal
+  7: "bg-purple-100 text-purple-800", // Familia
+  8: "bg-blue-100 text-blue-800", // Migratorio
+  9: "bg-orange-100 text-orange-800", // Corporativo
+  10: "bg-rose-100 text-rose-800", // Tributario y Finanzas
+};

@@ -7,40 +7,6 @@ import { lawAreasCatalog } from "@/db/schemas/law-areas-schema";
 import { provincesCatalog } from "@/db/schemas/provinces-schema";
 import { db } from "../db";
 
-async function getAllCasesByClientId(clientId: SelectCase["clientId"]) {
-  if (!clientId) {
-    throw new Error("El ID del cliente no puede estar vacío.");
-  }
-
-  const result = await db
-    .select({
-      caseId: casesTable.caseId,
-      title: casesTable.title,
-      description: casesTable.description,
-      lawAreaId: casesTable.lawAreaId,
-      lawAreaLabel: lawAreasCatalog.lawAreaLabel,
-      provinceId: casesTable.provinceId,
-      provinceLabel: provincesCatalog.provinceLabel,
-      status: casesTable.status,
-      createdAt: casesTable.createdAt,
-    })
-    .from(casesTable)
-    .leftJoin(
-      lawAreasCatalog,
-      eq(casesTable.lawAreaId, lawAreasCatalog.lawAreaId)
-    )
-    .leftJoin(
-      provincesCatalog,
-      eq(casesTable.provinceId, provincesCatalog.provinceId)
-    )
-    .where(
-      and(eq(casesTable.clientId, clientId), eq(casesTable.isDeleted, false))
-    )
-    .orderBy(desc(casesTable.createdAt));
-
-  return result;
-}
-
 async function getCaseById(caseId: SelectCase["caseId"]) {
   if (!caseId) {
     throw new Error("El ID del caso no puede estar vacío.");
@@ -125,22 +91,74 @@ async function deleteCase(caseId: SelectCase["caseId"]) {
   return result[0];
 }
 
-export type GetCase = {
-  caseId: string;
-  title: string | null;
-  description: string;
-  lawAreaId: number;
-  lawAreaLabel: string | null;
-  provinceId: number;
-  provinceLabel: string | null;
-  status: "open" | "in_progress" | "closed" | "cancelled";
-  createdAt: Date;
-};
+async function getAllCasesByClientId(clientId: SelectCase["clientId"]) {
+  if (!clientId) {
+    throw new Error("El ID del cliente no puede estar vacío.");
+  }
+
+  const result = await db
+    .select({
+      caseId: casesTable.caseId,
+      title: casesTable.title,
+      description: casesTable.description,
+      lawAreaId: casesTable.lawAreaId,
+      lawAreaLabel: lawAreasCatalog.lawAreaLabel,
+      provinceId: casesTable.provinceId,
+      provinceLabel: provincesCatalog.provinceLabel,
+      status: casesTable.status,
+      createdAt: casesTable.createdAt,
+    })
+    .from(casesTable)
+    .leftJoin(
+      lawAreasCatalog,
+      eq(casesTable.lawAreaId, lawAreasCatalog.lawAreaId)
+    )
+    .leftJoin(
+      provincesCatalog,
+      eq(casesTable.provinceId, provincesCatalog.provinceId)
+    )
+    .where(
+      and(eq(casesTable.clientId, clientId), eq(casesTable.isDeleted, false))
+    )
+    .orderBy(desc(casesTable.createdAt));
+
+  return result;
+}
+
+async function getAllActiveCases() {
+  const result = await db
+    .select({
+      caseId: casesTable.caseId,
+      title: casesTable.title,
+      description: casesTable.description,
+      lawAreaId: casesTable.lawAreaId,
+      lawAreaLabel: lawAreasCatalog.lawAreaLabel,
+      provinceId: casesTable.provinceId,
+      provinceLabel: provincesCatalog.provinceLabel,
+      status: casesTable.status,
+      countBids: casesTable.countBids,
+      createdAt: casesTable.createdAt,
+    })
+    .from(casesTable)
+    .leftJoin(
+      lawAreasCatalog,
+      eq(casesTable.lawAreaId, lawAreasCatalog.lawAreaId)
+    )
+    .leftJoin(
+      provincesCatalog,
+      eq(casesTable.provinceId, provincesCatalog.provinceId)
+    )
+    .where(and(eq(casesTable.status, "open"), eq(casesTable.isDeleted, false)))
+    .orderBy(desc(casesTable.createdAt));
+
+  return result;
+}
 
 export {
-  getAllCasesByClientId,
   getCaseById,
   createCase,
   updateCase,
   deleteCase,
+  getAllCasesByClientId,
+  getAllActiveCases,
 };

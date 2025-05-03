@@ -35,7 +35,7 @@ export function CreateCaseModal({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="w-full md:w-auto">
-          <PlusCircle className="mr-2 h-4 w-4" />
+          <PlusCircle className="size-4" />
           Nuevo caso
         </Button>
       </DialogTrigger>

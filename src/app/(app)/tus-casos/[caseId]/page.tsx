@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getRelativeTime } from "@/utils/utils";
+import { cn, getRelativeTime } from "@/utils/utils";
 import { ArrowLeft, Calendar, MapPin, Scale, User2 } from "lucide-react";
 import { getCaseById } from "@/lib/cases-actions";
 import { Badge } from "@/components/ui/badge";
@@ -38,31 +38,49 @@ export default async function CaseDetailPage({
         </p>
       </div>
 
-      {/* Información del caso */}
       <Card className="mb-6">
         <CardHeader>
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col-reverse md:flex-row items-start md:justify-between md:items-center">
-              <CardTitle className="text-2xl">{caseData.title}</CardTitle>
-              <Badge variant="default">
-                {caseStatusLabels[caseData.status]}
-              </Badge>
-            </div>
-            <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Scale className="size-4" />
-                {caseData.lawAreaLabel}
-              </span>
-              <span className="hidden md:block">•</span>
-              <span className="flex items-center gap-1">
-                <MapPin className="size-4" />
-                {caseData.provinceLabel}
-              </span>
-              <span className="hidden md:block">•</span>
-              <span className="flex items-center gap-1">
-                <Calendar className="size-4" />
-                {getRelativeTime(new Date(caseData.createdAt))}
-              </span>
+          <div className="flex flex-col-reverse md:flex-col gap-2">
+            <span
+              className={cn(
+                "flex items-center gap-1 px-2 py-0.5 rounded-full font-medium text-sm md:text-base w-fit",
+                {
+                  "bg-yellow-100 text-yellow-800": caseData.lawAreaId === 1,
+                  "bg-green-100 text-green-800": caseData.lawAreaId === 2,
+                  "bg-pink-100 text-pink-800": caseData.lawAreaId === 3,
+                  "bg-indigo-100 text-indigo-800": caseData.lawAreaId === 4,
+                  "bg-red-100 text-red-800": caseData.lawAreaId === 5,
+                  "bg-gray-200 text-gray-900": caseData.lawAreaId === 6,
+                  "bg-purple-100 text-purple-800": caseData.lawAreaId === 7,
+                  "bg-blue-100 text-blue-800": caseData.lawAreaId === 8,
+                  "bg-orange-100 text-orange-800": caseData.lawAreaId === 9,
+                  "bg-rose-100 text-rose-800": caseData.lawAreaId === 10,
+                }
+              )}
+            >
+              <Scale className="size-3 md:size-4" />
+              {caseData.lawAreaLabel}
+            </span>
+            <div>
+              <div className="flex flex-col-reverse md:flex-row items-start md:justify-between md:items-center">
+                <CardTitle className="text-2xl my-2">
+                  {caseData.title}
+                </CardTitle>
+                <Badge variant="default">
+                  {caseStatusLabels[caseData.status]}
+                </Badge>
+              </div>
+              <div className="flex flex-wrap gap-2 text-sm md:text-base text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <MapPin className="size-4" />
+                  {caseData.provinceLabel}
+                </span>
+                <span className="hidden md:block">•</span>
+                <span className="flex items-center gap-1">
+                  <Calendar className="size-4" />
+                  {getRelativeTime(new Date(caseData.createdAt))}
+                </span>
+              </div>
             </div>
           </div>
         </CardHeader>

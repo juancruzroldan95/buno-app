@@ -4,8 +4,8 @@ import { getClientByUserId } from "@/lib/clients-actions";
 import { getAllLawAreas } from "@/lib/law-areas-actions";
 import { getAllProvinces } from "@/lib/provinces-actions";
 import { getUserByUid } from "@/lib/users-actions";
-import { CasesList } from "./components/CasesList";
 import { CreateCaseModal } from "./components/CreateCaseModal";
+import { YourCasesList } from "./components/YourCasesList";
 
 export default async function YourCasesPage() {
   const { currentUser } = await getAuthenticatedAppForUser();
@@ -24,7 +24,7 @@ export default async function YourCasesPage() {
       <div className="md:flex md:items-center md:justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold">Tus casos</h1>
-          <p className="text-gray-500">
+          <p className="text-muted-foreground">
             Acá podés ver y gestionar tus casos publicados.
           </p>
         </div>
@@ -37,7 +37,7 @@ export default async function YourCasesPage() {
         </div>
       </div>
 
-      <CasesList cases={casesData} />
+      <YourCasesList cases={casesData} />
     </div>
   );
 }
