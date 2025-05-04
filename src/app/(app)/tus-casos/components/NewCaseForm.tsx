@@ -35,6 +35,19 @@ interface NewCaseFormProps {
   setOpen: (open: boolean) => void;
 }
 
+const newCaseFormSchema = z.object({
+  title: z.string({
+    required_error: "Hacé clic en 'Generar descripción ✨' antes de continuar",
+  }),
+  description: z
+    .string({ required_error: "La descripción es obligatoria" })
+    .min(50, "La descripción debe tener al menos 50 caracteres"),
+  provinceId: z.number({ required_error: "La provincia es obligatoria" }),
+  lawAreaId: z.number({
+    required_error: "El área de derecho es obligatoria",
+  }),
+});
+
 export default function NewCaseForm({
   clientId,
   lawAreas,
@@ -44,20 +57,6 @@ export default function NewCaseForm({
   const { toast } = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedTitle, setGeneratedTitle] = useState("");
-
-  const newCaseFormSchema = z.object({
-    title: z.string({
-      required_error:
-        "Hacé clic en 'Generar descripción ✨' antes de continuar",
-    }),
-    description: z
-      .string({ required_error: "La descripción es obligatoria" })
-      .min(50, "La descripción debe tener al menos 50 caracteres"),
-    provinceId: z.number({ required_error: "La provincia es obligatoria" }),
-    lawAreaId: z.number({
-      required_error: "El área de derecho es obligatoria",
-    }),
-  });
 
   const newCaseForm = useForm<z.infer<typeof newCaseFormSchema>>({
     resolver: zodResolver(newCaseFormSchema),
@@ -115,7 +114,7 @@ export default function NewCaseForm({
       console.error(error);
       toast({
         title: "Error",
-        description: "No se pudo crear el caso. Intente nuevamente.",
+        description: "No se pudo crear el caso. Intentá nuevamente.",
         variant: "destructive",
       });
     }
@@ -245,11 +244,13 @@ export default function NewCaseForm({
         />
         <DialogFooter className="mt-2">
           <Button type="submit" disabled={newCaseForm.formState.isSubmitting}>
-            {newCaseForm.formState.isSubmitting
-              ? "Publicando..."
-              : "Publicar caso"}
-            {newCaseForm.formState.isSubmitting && (
-              <Loader2 className="mr-1 animate-spin" />
+            {newCaseForm.formState.isSubmitting ? (
+              <>
+                Publicando...
+                <Loader2 className="animate-spin" />
+              </>
+            ) : (
+              "Publicar caso"
             )}
           </Button>
         </DialogFooter>

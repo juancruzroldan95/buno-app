@@ -1,10 +1,18 @@
 import Link from "next/link";
 import { cn, getRelativeTime } from "@/utils/utils";
-import { ArrowLeft, Calendar, MapPin, Scale, User2 } from "lucide-react";
+import { ArrowLeft, Calendar, MapPin, Phone, Scale, User2 } from "lucide-react";
 import { getCaseById } from "@/lib/cases-actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ContactButton } from "./components/ContactButton";
 
 export const dynamic = "force-dynamic";
 
@@ -102,31 +110,54 @@ export default async function CaseDetailPage({
           hacer clic en cada propuesta para ver más detalles.
         </div>
 
-        {/* Lista de propuestas simulada */}
-        <div className="space-y-4">
-          {[1, 2, 3].map((proposal) => (
-            <Card
-              key={proposal}
-              className="hover:ring-1 ring-primary transition cursor-pointer"
-            >
-              <CardContent className="p-4 flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 font-medium">
-                    <User2 className="size-5 text-primary" />
-                    Nombre del abogado {proposal}
+        {caseData.bids.length === 0 ? (
+          <p className="text-muted-foreground">
+            Aún no hay propuestas para este caso.
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {caseData.bids.map((bid) => (
+              <Card
+                key={bid.bidId}
+                className="hover:ring-1 ring-primary transition cursor-pointer"
+              >
+                <CardContent className="p-4 flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 font-medium">
+                      <User2 className="size-5 text-primary" />
+                      {bid.lawyer?.firstName || "Abogado/a sin nombre"}
+                    </div>
+                    <Dialog>
+                      <ContactButton uid={bid.lawyer?.lawyerId || "sin-uid"} />
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Contacto del abogado</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-2 text-sm">
+                          <div>
+                            <span className="font-medium text-primary">
+                              Email:
+                            </span>{" "}
+                            {bid.lawyer?.email || "No disponible"}
+                          </div>
+                          <div>
+                            <span className="font-medium text-primary">
+                              Teléfono:
+                            </span>{" "}
+                            {bid.lawyer?.phone || "No disponible"}
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </div>
-                  <Button size="sm" variant="outline">
-                    Ver propuesta
-                  </Button>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Breve resumen de la propuesta o comentario inicial del
-                  abogado. Al hacer clic podés ver la propuesta completa.
-                </p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {bid.proposal}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

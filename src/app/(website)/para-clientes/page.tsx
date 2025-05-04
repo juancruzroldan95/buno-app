@@ -1,15 +1,16 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   BaggageClaim,
-  Briefcase,
-  Building,
+  Banknote,
+  Building2,
+  Flame,
   Handshake,
-  Home,
+  HardHat,
+  HeartCrack,
+  ReceiptText,
   Scale,
   Search,
   Shield,
-  TreeDeciduous,
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,44 +24,64 @@ import {
 
 const services = [
   {
-    title: "Familia",
-    description: "Soluciones legales para divorcios, adopciones y herencias.",
-    icon: Users,
+    title: "Despidos y Accidentes",
+    description:
+      "Asesoría en casos de despido, indemnizaciones, accidentes laborales, y derechos de los trabajadores. Brinda apoyo para resolver conflictos laborales y asegurar el cumplimiento de las normativas laborales vigentes.",
+    icon: HardHat,
   },
   {
-    title: "Penal",
-    description: "Defensa en delitos menores y situaciones complejas.",
-    icon: Scale,
+    title: "Contratos",
+    description:
+      "Redacción, revisión y negociación de contratos de todo tipo, incluyendo contratos laborales, comerciales y civiles. Asegura que los acuerdos legales sean claros, precisos y que cumplan con la normativa argentina.",
+    icon: ReceiptText,
   },
   {
-    title: "Corporativo",
-    description: "Asesoría para contratos, fusiones y más.",
-    icon: Building,
+    title: "Divorcios",
+    description:
+      "Asesoría y representación en casos de divorcio, incluyendo acuerdos de custodia, distribución de bienes, y pensiones alimentarias. Facilita la resolución legal de procesos de separación y garantiza la protección de los derechos de las partes involucradas.",
+    icon: HeartCrack,
   },
   {
-    title: "Propiedad",
-    description: "Protegé tus ideas con patentes y derechos de autor.",
+    title: "Marcas y Patentes",
+    description:
+      "Apoyo en el registro, protección y gestión de marcas, patentes, y otros activos de propiedad intelectual. Asegura que las innovaciones y la identidad comercial estén protegidas de acuerdo con la ley.",
     icon: Shield,
   },
   {
-    title: "Migraciones",
-    description: "Asesoría para trámites de residencia y ciudadanía.",
+    title: "Siniestros",
+    description:
+      "Asesoramiento en reclamos y resolución de conflictos derivados de accidentes de tránsito, incendios y otros eventos con daños personales o materiales. Ayuda en la gestión de indemnizaciones y coberturas de seguros.",
+    icon: Flame,
+  },
+  {
+    title: "Penal",
+    description:
+      "Defensa y representación en casos penales, incluyendo delitos comunes y económicos. Ofrece asesoramiento y apoyo legal en todas las etapas del proceso penal.",
+    icon: Scale,
+  },
+  {
+    title: "Familia",
+    description:
+      "Asesoría en temas de relaciones familiares, incluyendo matrimonio, divorcio, acuerdos de custodia, adopciones y pensiones alimentarias. También incluye la planificación y tramitación de sucesiones y herencias.",
+    icon: Users,
+  },
+  {
+    title: "Migratorio",
+    description:
+      "Asesoría en trámites de residencia, ciudadanía y visados para extranjeros en Argentina. Facilita la regularización de estatus migratorio y el cumplimiento de requisitos legales para vivir y trabajar en el país.",
     icon: BaggageClaim,
   },
   {
-    title: "Trabajo",
-    description: "Protección de tus derechos laborales y contratos.",
-    icon: Briefcase,
+    title: "Corporativo",
+    description:
+      "Asesoría en constitución, gestión y reestructuración de empresas, incluyendo fusiones, adquisiciones, compliance y conflictos societarios.",
+    icon: Building2,
   },
   {
-    title: "Desalojo",
-    description: "Asesoría legal en procesos de desalojo y alquiler.",
-    icon: Home,
-  },
-  {
-    title: "Patria potestad",
-    description: "Asesoría en custodia, patria potestad y visitas.",
-    icon: TreeDeciduous,
+    title: "Tributario y Finanzas",
+    description:
+      "Planificación fiscal, cumplimiento tributario, y defensa en disputas impositivas, ayudando a optimizar la carga impositiva y proteger activos.",
+    icon: Banknote,
   },
 ];
 

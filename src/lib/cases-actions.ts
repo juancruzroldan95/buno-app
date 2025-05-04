@@ -2,8 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { and, desc, eq } from "drizzle-orm";
+import { bidsTable } from "@/db/schemas/bids-schema";
 import { InsertCase, SelectCase, casesTable } from "@/db/schemas/cases-schema";
 import { lawAreasCatalog } from "@/db/schemas/law-areas-schema";
+import { lawyersTable } from "@/db/schemas/lawyers-schema";
 import { provincesCatalog } from "@/db/schemas/provinces-schema";
 import { db } from "../db";
 
@@ -23,6 +25,20 @@ async function getCaseById(caseId: SelectCase["caseId"]) {
       provinceLabel: provincesCatalog.provinceLabel,
       status: casesTable.status,
       createdAt: casesTable.createdAt,
+
+      bidId: bidsTable.bidId,
+      proposal: bidsTable.proposal,
+      bidAmount: bidsTable.bidAmount,
+      bidType: bidsTable.bidType,
+      bidStatus: bidsTable.status,
+      bidCreatedAt: bidsTable.createdAt,
+
+      lawyerId: lawyersTable.lawyerId,
+      lawyerFirstName: lawyersTable.firstName,
+      lawyerLastName: lawyersTable.lastName,
+      lawyerProfilePicture: lawyersTable.profilePicture,
+      lawyerEmail: lawyersTable.email,
+      lawyerPhone: lawyersTable.phone,
     })
     .from(casesTable)
     .leftJoin(
@@ -33,13 +49,51 @@ async function getCaseById(caseId: SelectCase["caseId"]) {
       provincesCatalog,
       eq(casesTable.provinceId, provincesCatalog.provinceId)
     )
+    .leftJoin(bidsTable, eq(casesTable.caseId, bidsTable.caseId))
+    .leftJoin(lawyersTable, eq(bidsTable.lawyerId, lawyersTable.lawyerId))
     .where(and(eq(casesTable.caseId, caseId), eq(casesTable.isDeleted, false)));
 
   if (result.length === 0) {
     throw new Error(`No se encontró ningún caso con el ID: ${caseId}`);
   }
 
-  return result[0];
+  const {
+    bidId,
+    proposal,
+    bidAmount,
+    bidType,
+    bidStatus,
+    bidCreatedAt,
+    lawyerId,
+    lawyerFirstName,
+    lawyerLastName,
+    lawyerProfilePicture,
+    ...caseData
+  } = result[0];
+
+  const bids = result
+    .filter((row) => row.bidId !== null)
+    .map((row) => ({
+      bidId: row.bidId,
+      proposal: row.proposal,
+      bidAmount: row.bidAmount,
+      bidType: row.bidType,
+      status: row.bidStatus,
+      createdAt: row.bidCreatedAt,
+      lawyer: {
+        lawyerId: row.lawyerId,
+        firstName: row.lawyerFirstName,
+        lastName: row.lawyerLastName,
+        profilePicture: row.lawyerProfilePicture,
+        email: row.lawyerEmail,
+        phone: row.lawyerPhone,
+      },
+    }));
+
+  return {
+    ...caseData,
+    bids,
+  };
 }
 
 async function createCase(data: InsertCase) {

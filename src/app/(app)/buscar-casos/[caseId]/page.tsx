@@ -1,34 +1,27 @@
 import Link from "next/link";
 import { cn, getRelativeTime } from "@/utils/utils";
-import {
-  ArrowLeft,
-  Calendar,
-  MapPin,
-  PenTool,
-  PlusCircle,
-  Scale,
-} from "lucide-react";
+import { ArrowLeft, Calendar, MapPin, PenTool, Scale } from "lucide-react";
+import { getAuthenticatedAppForUser } from "@/firebase/serverApp";
 import { getCaseById } from "@/lib/cases-actions";
+import { getLawyerByUserId } from "@/lib/lawyers-actions";
+import { getUserByUid } from "@/lib/users-actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CreateBidModal } from "./components/CreateBidModal";
 
 export const dynamic = "force-dynamic";
-
-// export async function generateStaticParams() {
-//   const cases = await getAllActiveCases();
-
-//   return cases.map((_case) => ({
-//     caseId: _case.caseId,
-//   }));
-// }
 
 export default async function CaseDetailForLawyerPage({
   params,
 }: {
   params: Promise<{ caseId: string }>;
 }) {
+  const { currentUser } = await getAuthenticatedAppForUser();
+  const dbUser = await getUserByUid(currentUser?.uid as string);
+
   const { caseId } = await params;
   const caseData = await getCaseById(caseId);
+  const lawyerData = await getLawyerByUserId(dbUser.uid);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-6 lg:px-8">
@@ -95,10 +88,10 @@ export default async function CaseDetailForLawyerPage({
 
       {caseData.status === "open" ? (
         <div className="text-center">
-          <Button className="w-full md:w-auto">
-            <PenTool className="size-4" />
-            Escribir propuesta
-          </Button>
+          <CreateBidModal
+            caseId={caseData.caseId}
+            lawyerId={lawyerData.lawyerId}
+          />
         </div>
       ) : (
         <p className="text-center text-muted-foreground">
