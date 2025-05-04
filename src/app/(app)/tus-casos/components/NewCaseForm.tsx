@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { LawAreaSelector, ProvinceSelector } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, WandSparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { generateCaseSummary } from "@/lib/ai/generate-case-summary";
@@ -37,7 +37,7 @@ interface NewCaseFormProps {
 
 const newCaseFormSchema = z.object({
   title: z.string({
-    required_error: "Hacé clic en 'Generar descripción ✨' antes de continuar",
+    required_error: "Hacé clic en 'Generar caso' antes de continuar",
   }),
   description: z
     .string({ required_error: "La descripción es obligatoria" })
@@ -131,11 +131,11 @@ export default function NewCaseForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contanos qué te pasó</FormLabel>
+              <FormLabel className="text-base">Descripción:</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Escribí tu situación legal con tus palabras"
-                  className="resize-none h-32"
+                  placeholder="Escribí tu situación legal con tus palabras..."
+                  className="resize-none h-40"
                   {...field}
                 />
               </FormControl>
@@ -143,20 +143,21 @@ export default function NewCaseForm({
               <div className="mt-2">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="secondary"
+                  className="w-full font-bold"
                   size="sm"
                   onClick={handleGenerate}
                   disabled={isGenerating}
                 >
-                  {isGenerating
-                    ? "Generando descripción..."
-                    : "Generar descripción ✨"}
+                  {isGenerating ? (
+                    "Leyendo descripción..."
+                  ) : (
+                    <>
+                      Generar caso
+                      <WandSparkles className="size-4" />
+                    </>
+                  )}
                 </Button>
-                {isGenerating && (
-                  <p className="text-sm text-muted-foreground mt-1">
-                    ✨ Generando resumen con IA...
-                  </p>
-                )}
               </div>
             </FormItem>
           )}
@@ -164,9 +165,7 @@ export default function NewCaseForm({
 
         {generatedTitle && (
           <div className="text-sm text-muted-foreground border rounded-md p-3 bg-muted">
-            <strong className="block text-primary mb-1">
-              Título sugerido:
-            </strong>
+            <strong className="block text-primary mb-1">Título:</strong>
             {generatedTitle}
           </div>
         )}
@@ -180,13 +179,16 @@ export default function NewCaseForm({
             </FormItem>
           )}
         />
+
         <FormField
           control={newCaseForm.control}
           name="provinceId"
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center">
-                <FormLabel className="w-1/4 mr-2">¿De dónde sos?</FormLabel>
+                <FormLabel className="w-1/4 mr-2 text-base">
+                  ¿De dónde sos?
+                </FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
                   defaultValue={field.value?.toString()}
@@ -217,7 +219,9 @@ export default function NewCaseForm({
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center">
-                <FormLabel className="w-1/4 mr-2">Área legal</FormLabel>
+                <FormLabel className="w-1/4 mr-2 text-base">
+                  Área legal
+                </FormLabel>
                 <Select
                   onValueChange={(value) => field.onChange(Number(value))}
                   value={field.value?.toString()}

@@ -43,9 +43,11 @@ export function CreateCaseModal({
         <DialogHeader>
           <DialogTitle>¿Qué necesitás que haga un abogado?</DialogTitle>
           <DialogDescription>
-            Describí tus necesidades legales. Incluí tantos detalles como sea
-            posible, ya que esto nos ayudará a identificar a los mejores
-            abogados para tu caso.
+            Escribí con tus palabras lo que te pasó o lo que necesitás resolver.
+            No hace falta que suene formal, nuestra inteligencia artificial va a
+            ayudarte a redactar tu caso de forma clara y profesional. Cuantos
+            más detalles incluyas, mejor vamos a poder armar el caso por vos e
+            identificar a los mejores abogados para tu caso.
           </DialogDescription>
         </DialogHeader>
         <NewCaseForm

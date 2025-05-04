@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { cn, getRelativeTime } from "@/utils/utils";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import { ArrowLeft, Calendar, MapPin, Phone, Scale, User2 } from "lucide-react";
 import { getCaseById } from "@/lib/cases-actions";
 import { Badge } from "@/components/ui/badge";
@@ -102,16 +104,14 @@ export default async function CaseDetailPage({
         </CardContent>
       </Card>
 
-      {/* Propuestas recibidas */}
       <div className="space-y-4">
         <h2 className="text-2xl font-bold">Propuestas recibidas</h2>
         <div className="text-muted-foreground mb-4">
-          Estas son las propuestas que los abogados enviaron a tu caso. Podés
-          hacer clic en cada propuesta para ver más detalles.
+          Estas son las propuestas que los abogados enviaron a tu caso.
         </div>
 
         {caseData.bids.length === 0 ? (
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-center">
             Aún no hay propuestas para este caso.
           </p>
         ) : (
@@ -119,38 +119,33 @@ export default async function CaseDetailPage({
             {caseData.bids.map((bid) => (
               <Card
                 key={bid.bidId}
-                className="hover:ring-1 ring-primary transition cursor-pointer"
+                className="hover:ring-1 ring-primary transition"
               >
-                <CardContent className="p-4 flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 font-medium">
-                      <User2 className="size-5 text-primary" />
-                      {bid.lawyer?.firstName || "Abogado/a sin nombre"}
+                <CardContent className="p-4 flex flex-col gap-4">
+                  <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center justify-between">
+                    <div className="flex flex-col gap-0.5">
+                      <div className="flex items-center gap-2 font-medium">
+                        <User2 className="size-5 text-primary" />
+                        Dr.{" "}
+                        {bid.lawyer.firstName +
+                          (bid.lawyer.lastName
+                            ? " " + bid.lawyer.lastName
+                            : "")}
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        Enviado el{" "}
+                        {format(bid.createdAt!, "dd 'de' MMMM 'de' yyyy", {
+                          locale: es,
+                        })}
+                      </span>
                     </div>
-                    <Dialog>
-                      <ContactButton uid={bid.lawyer?.lawyerId || "sin-uid"} />
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Contacto del abogado</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-2 text-sm">
-                          <div>
-                            <span className="font-medium text-primary">
-                              Email:
-                            </span>{" "}
-                            {bid.lawyer?.email || "No disponible"}
-                          </div>
-                          <div>
-                            <span className="font-medium text-primary">
-                              Teléfono:
-                            </span>{" "}
-                            {bid.lawyer?.phone || "No disponible"}
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
+                    <ContactButton
+                      uid={bid.lawyer.uid}
+                      email={bid.lawyer.email}
+                      phone={bid.lawyer.phone}
+                    />
                   </div>
-                  <p className="text-sm text-muted-foreground line-clamp-2">
+                  <p className="text-sm text-muted-foreground">
                     {bid.proposal}
                   </p>
                 </CardContent>

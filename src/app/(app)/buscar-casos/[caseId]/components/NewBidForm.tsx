@@ -1,10 +1,12 @@
 "use client";
 
+import React, { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, WandSparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { improveProposal } from "@/lib/ai/improve-proposal";
 import { createBid } from "@/lib/bids-actions";
 import { Button } from "@/components/ui/button";
 import { DialogFooter } from "@/components/ui/dialog";
@@ -16,7 +18,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 interface NewBidFormProps {
@@ -38,6 +39,7 @@ export default function NewBidForm({
   setOpen,
 }: NewBidFormProps) {
   const { toast } = useToast();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const form = useForm<z.infer<typeof bidFormSchema>>({
     resolver: zodResolver(bidFormSchema),
@@ -46,6 +48,35 @@ export default function NewBidForm({
       bidAmount: 0,
     },
   });
+
+  async function handleGenerate() {
+    const currentText = form.getValues("proposal");
+
+    if (currentText.length < 50) {
+      form.setError("proposal", {
+        type: "manual",
+        message: "La propuesta debe tener al menos 20 caracteres",
+      });
+      return;
+    }
+
+    form.clearErrors("proposal");
+
+    try {
+      setIsGenerating(true);
+      const improvedProposal = await improveProposal(currentText);
+      form.setValue("proposal", improvedProposal);
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Error al usar la IA",
+        description: "Hubo un problema al generar la descripción.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  }
 
   async function onSubmit(values: z.infer<typeof bidFormSchema>) {
     try {
@@ -82,40 +113,43 @@ export default function NewBidForm({
           name="proposal"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Escribí tu propuesta*</FormLabel>
+              <FormLabel className="text-base">Escribí tu propuesta</FormLabel>
               <FormControl>
                 <Textarea
-                  className="resize-none h-32"
+                  className="resize-none h-64"
                   placeholder="Contale al cliente cómo podés ayudarlo..."
                   {...field}
                 />
               </FormControl>
               <FormMessage />
+              <div className="mt-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="w-full font-bold"
+                  size="sm"
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? (
+                    "Leyendo tu propuesta..."
+                  ) : (
+                    <>
+                      Mejorar propuesta
+                      <WandSparkles className="size-4" />
+                    </>
+                  )}
+                </Button>
+              </div>
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="bidAmount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Presupuesto estimado</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="Ej: 10000"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <DialogFooter className="mt-2">
-          <Button type="submit" disabled={form.formState.isSubmitting}>
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting || isGenerating}
+          >
             {form.formState.isSubmitting ? (
               <>
                 Enviando...

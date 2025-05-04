@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteCookie, setCookie } from "cookies-next";
 import { FirebaseError } from "firebase/app";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

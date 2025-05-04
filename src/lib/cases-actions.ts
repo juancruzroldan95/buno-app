@@ -39,6 +39,7 @@ async function getCaseById(caseId: SelectCase["caseId"]) {
       lawyerProfilePicture: lawyersTable.profilePicture,
       lawyerEmail: lawyersTable.email,
       lawyerPhone: lawyersTable.phone,
+      lawyerUid: lawyersTable.uid,
     })
     .from(casesTable)
     .leftJoin(
@@ -68,6 +69,7 @@ async function getCaseById(caseId: SelectCase["caseId"]) {
     lawyerFirstName,
     lawyerLastName,
     lawyerProfilePicture,
+    lawyerUid,
     ...caseData
   } = result[0];
 
@@ -87,6 +89,7 @@ async function getCaseById(caseId: SelectCase["caseId"]) {
         profilePicture: row.lawyerProfilePicture,
         email: row.lawyerEmail,
         phone: row.lawyerPhone,
+        uid: row.lawyerUid,
       },
     }));
 
