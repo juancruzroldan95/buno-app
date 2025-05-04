@@ -4,7 +4,9 @@ import {
   User,
   onAuthStateChanged as _onAuthStateChanged,
   onIdTokenChanged as _onIdTokenChanged,
+  createUserWithEmailAndPassword,
   getAdditionalUserInfo,
+  signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "./clientApp";
@@ -29,6 +31,24 @@ export async function signInWithGoogle() {
     isNewUser,
     user,
   };
+}
+
+export async function registerWithEmailAndPassword(
+  email: string,
+  password: string
+) {
+  const result = await createUserWithEmailAndPassword(auth, email, password);
+  const createdUser = result.user;
+  return createdUser;
+}
+
+export async function loginWithEmailAndPassword(
+  email: string,
+  password: string
+) {
+  const result = await signInWithEmailAndPassword(auth, email, password);
+  const signedInUser = result.user;
+  return signedInUser;
 }
 
 export async function signOut() {

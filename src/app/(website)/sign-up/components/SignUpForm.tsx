@@ -3,11 +3,17 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { setCookie } from "cookies-next";
-import { Scale, User } from "lucide-react";
+import { deleteCookie, setCookie } from "cookies-next";
+import { FirebaseError } from "firebase/app";
+import { Loader2, Scale, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { signInWithGoogle } from "@/firebase/auth";
+import {
+  registerWithEmailAndPassword,
+  signInWithGoogle,
+} from "@/firebase/auth";
+import { createClient } from "@/lib/clients-actions";
+import { createLawyer } from "@/lib/lawyers-actions";
 import { createUser } from "@/lib/users-actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,31 +28,30 @@ import {
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
+const signUpFormSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
+  lastName: z
+    .string()
+    .min(2, { message: "El apellido debe tener al menos 2 caracteres" }),
+  email: z.string().email({ message: "Por favor ingresá un email válido" }),
+  password: z
+    .string()
+    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
+  accountType: z.enum(["lawyer", "client"], {
+    message: "Por favor seleccioná un tipo de cuenta",
+  }),
+});
+
 export default function SignUpForm() {
   const router = useRouter();
-  const [isSignUpLoading, setIsSignUpLoading] = useState(false);
   const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false);
   const [googleErrorMessage, setGoogleErrorMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const formSchema = z.object({
-    firstName: z
-      .string()
-      .min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
-    lastName: z
-      .string()
-      .min(2, { message: "El apellido debe tener al menos 2 caracteres" }),
-    email: z.string().email({ message: "Por favor ingresá un email válido" }),
-    password: z
-      .string()
-      .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
-    accountType: z.enum(["lawyer", "client"], {
-      message: "Por favor seleccioná un tipo de cuenta",
-    }),
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof signUpFormSchema>>({
+    resolver: zodResolver(signUpFormSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -56,18 +61,65 @@ export default function SignUpForm() {
     },
   });
 
-  async function handleSignUp() {
+  async function onSubmit(values: z.infer<typeof signUpFormSchema>) {
     try {
-      setIsSignUpLoading(true);
-      // const { authToken, user } = await register(values);
-      // console.log(authToken);
-      // console.log(user);
-      return;
-      router.push("/dashboard");
+      const user = await registerWithEmailAndPassword(
+        values.email,
+        values.password
+      );
+      const idToken = await user.getIdToken();
+
+      if (user) {
+        const dbUser = {
+          uid: user.uid,
+          email: values.email,
+          displayName: values.firstName + values.lastName,
+          roleId: values.accountType === "lawyer" ? 1 : 2,
+        };
+        await createUser(dbUser);
+
+        if (values.accountType === "lawyer") {
+          await createLawyer({
+            uid: user.uid,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+          });
+        } else if (values.accountType === "client") {
+          await createClient({
+            uid: user.uid,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: user.email,
+          });
+        }
+
+        await setCookie("__session", idToken);
+        router.push("/como-funciona");
+      } else {
+        await deleteCookie("__session");
+      }
     } catch (error) {
-      console.error(error);
-    } finally {
-      setIsSignUpLoading(false);
+      console.error("Error in manual sign up -", error);
+      await deleteCookie("__session");
+
+      if (error instanceof FirebaseError) {
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setErrorMessage(
+              "Ese email ya está registrado. Probá iniciar sesión."
+            );
+            break;
+          default:
+            setErrorMessage(
+              "Ocurrió un error al crear la cuenta. Intentá de nuevo."
+            );
+        }
+      } else {
+        setErrorMessage(
+          "Ocurrió un error al crear la cuenta. Intentá de nuevo."
+        );
+      }
     }
   }
 
@@ -77,7 +129,6 @@ export default function SignUpForm() {
       setIsGoogleLoginLoading(true);
       const { user, isNewUser } = await signInWithGoogle();
       const idToken = await user.getIdToken();
-      await setCookie("__session", idToken);
 
       if (isNewUser) {
         const dbUser = {
@@ -87,12 +138,15 @@ export default function SignUpForm() {
           photoURL: user.photoURL,
         };
         await createUser(dbUser);
+        await setCookie("__session", idToken);
         router.push("/elegir-rol");
       } else {
+        await setCookie("__session", idToken);
         router.push("/inicio");
       }
     } catch (error) {
       console.error("Error in Google Sign Up", error);
+      await deleteCookie("__session");
       setGoogleErrorMessage(
         "Error al registrarse con Google. Intentá de nuevo."
       );
@@ -169,17 +223,14 @@ export default function SignUpForm() {
         </div>
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSignUp)}
-            className="space-y-6"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nombre</FormLabel>
+                    <FormLabel className="text-base">Nombre</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -192,7 +243,7 @@ export default function SignUpForm() {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Apellido</FormLabel>
+                    <FormLabel className="text-base">Apellido</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -207,7 +258,7 @@ export default function SignUpForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="text-base">Email</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -221,7 +272,7 @@ export default function SignUpForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Contraseña</FormLabel>
+                  <FormLabel className="text-base">Contraseña</FormLabel>
                   <FormControl>
                     <Input {...field} type="password" />
                   </FormControl>
@@ -269,9 +320,25 @@ export default function SignUpForm() {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isSignUpLoading}>
-              {isSignUpLoading ? "Creando cuenta..." : "Crear cuenta"}
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? (
+                <>
+                  Creando cuenta...
+                  <Loader2 className="animate-spin" />
+                </>
+              ) : (
+                "Crear cuenta"
+              )}
             </Button>
+
+            {errorMessage && (
+              <p className="text-red-500 text-center mt-2">{errorMessage}</p>
+            )}
+
             <p className="text-xs text-center">
               Al hacer clic en "Crear cuenta", acepto y comprendo los{" "}
               <span className="text-indigo-600">Términos de uso</span> y la{" "}

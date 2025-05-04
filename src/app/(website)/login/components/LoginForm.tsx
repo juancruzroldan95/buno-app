@@ -4,14 +4,16 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { setCookie } from "cookies-next";
+import { deleteCookie, setCookie } from "cookies-next";
+import { FirebaseError } from "firebase/app";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { signInWithGoogle } from "@/firebase/auth";
+import { loginWithEmailAndPassword, signInWithGoogle } from "@/firebase/auth";
 import { createUser } from "@/lib/users-actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -22,41 +24,53 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+const loginFormSchema = z.object({
+  email: z.string().email("Por favor ingresá un email válido"),
+  password: z.string().min(1, "La contraseña es obligatoria"),
+});
+
 export default function LoginForm() {
   const router = useRouter();
-  const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [isGoogleLoginLoading, setIsGoogleLoginLoading] = useState(false);
   const [googleErrorMessage, setGoogleErrorMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const formSchema = z.object({
-    email: z.string().email("Por favor ingresá un email válido"),
-    password: z.string().min(1, "La contraseña es obligatoria"),
-    rememberMe: z.boolean().default(false),
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof loginFormSchema>>({
+    resolver: zodResolver(loginFormSchema),
     defaultValues: {
       email: "",
       password: "",
-      rememberMe: false,
     },
   });
 
-  async function handleLogin(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof loginFormSchema>) {
     try {
-      setIsLoginLoading(true);
-      setErrorMessage("");
-      // const response = await firebaseLogin(values);
-      // console.log(response);
-      return;
-      router.push("/dashboard");
+      const user = await loginWithEmailAndPassword(
+        values.email,
+        values.password
+      );
+      const idToken = await user.getIdToken();
+
+      if (user) {
+        await setCookie("__session", idToken);
+        router.push("/inicio");
+      } else {
+        await deleteCookie("__session");
+      }
     } catch (error) {
-      console.error(error);
-      // setErrorMessage(error.message);
-    } finally {
-      setIsLoginLoading(false);
+      const firebaseError = error as FirebaseError;
+      console.error("Error in manual login -", firebaseError);
+      await deleteCookie("__session");
+
+      switch (firebaseError.code) {
+        case "auth/invalid-credential":
+          setErrorMessage("Email o contraseña inválido. Intentá de nuevo");
+          break;
+        default:
+          setErrorMessage(
+            "Ocurrió un error al iniciar sesión. Intentá de nuevo."
+          );
+      }
     }
   }
 
@@ -66,7 +80,6 @@ export default function LoginForm() {
       setIsGoogleLoginLoading(true);
       const { user, isNewUser } = await signInWithGoogle();
       const idToken = await user.getIdToken();
-      await setCookie("__session", idToken);
 
       if (isNewUser) {
         const dbUser = {
@@ -76,12 +89,15 @@ export default function LoginForm() {
           photoURL: user.photoURL,
         };
         await createUser(dbUser);
+        await setCookie("__session", idToken);
         router.push("/elegir-rol");
       } else {
+        await setCookie("__session", idToken);
         router.push("/inicio");
       }
     } catch (error) {
       console.error("Error in Google Login", error);
+      await deleteCookie("__session");
       setGoogleErrorMessage(
         "Error al registrarse con Google. Intentá de nuevo."
       );
@@ -158,13 +174,13 @@ export default function LoginForm() {
         </div>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="text-base">Email</FormLabel>
                   <FormControl>
                     <Input {...field} type="text" autoComplete="email" />
                   </FormControl>
@@ -179,7 +195,7 @@ export default function LoginForm() {
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center justify-between">
-                    <FormLabel>Contraseña</FormLabel>
+                    <FormLabel className="text-base">Contraseña</FormLabel>
                     <Link
                       href="/forgot-password"
                       className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
@@ -199,33 +215,24 @@ export default function LoginForm() {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="rememberMe"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Recordame</FormLabel>
-                  </div>
-                </FormItem>
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? (
+                <>
+                  Iniciando sesión...
+                  <Loader2 className="animate-spin" />
+                </>
+              ) : (
+                "Iniciar sesión"
               )}
-            />
+            </Button>
 
             {errorMessage && (
-              <div>
-                <p className="text-red-500 text-sm">{errorMessage}</p>
-              </div>
+              <p className="text-red-500 text-center mt-2">{errorMessage}</p>
             )}
-
-            <Button type="submit" className="w-full" disabled={isLoginLoading}>
-              {isLoginLoading ? "Iniciando sesión..." : "Iniciar sesión"}
-            </Button>
           </form>
         </Form>
       </CardContent>
