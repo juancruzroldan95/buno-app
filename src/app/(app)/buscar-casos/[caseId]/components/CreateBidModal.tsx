@@ -21,12 +21,14 @@ import NewBidForm from "./NewBidForm";
 
 interface CreateBidModalProps {
   caseId: string;
+  caseDescription: string;
   lawyerId: string;
   isDisabled: boolean;
 }
 
 export function CreateBidModal({
   caseId,
+  caseDescription,
   lawyerId,
   isDisabled,
 }: CreateBidModalProps) {
@@ -73,7 +75,12 @@ export function CreateBidModal({
             enfoque, experiencia relevante y un presupuesto estimado si querés.
           </DialogDescription>
         </DialogHeader>
-        <NewBidForm caseId={caseId} lawyerId={lawyerId} setOpen={setOpen} />
+        <NewBidForm
+          caseId={caseId}
+          caseDescription={caseDescription}
+          lawyerId={lawyerId}
+          setOpen={setOpen}
+        />
       </DialogContent>
     </Dialog>
   );

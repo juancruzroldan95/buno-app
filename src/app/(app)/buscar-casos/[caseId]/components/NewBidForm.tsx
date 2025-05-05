@@ -22,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 interface NewBidFormProps {
   caseId: string;
+  caseDescription: string;
   lawyerId: string;
   setOpen: (open: boolean) => void;
 }
@@ -35,6 +36,7 @@ const bidFormSchema = z.object({
 
 export default function NewBidForm({
   caseId,
+  caseDescription,
   lawyerId,
   setOpen,
 }: NewBidFormProps) {
@@ -64,7 +66,10 @@ export default function NewBidForm({
 
     try {
       setIsGenerating(true);
-      const improvedProposal = await improveProposal(currentText);
+      const improvedProposal = await improveProposal(
+        currentText,
+        caseDescription
+      );
       form.setValue("proposal", improvedProposal);
     } catch (err) {
       console.error(err);

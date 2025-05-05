@@ -93,6 +93,7 @@ export default async function CaseDetailForLawyerPage({
         <div className="text-center">
           <CreateBidModal
             caseId={caseData.caseId}
+            caseDescription={caseData.description}
             lawyerId={lawyerData.lawyerId}
             isDisabled={!!existingBid}
           />
