@@ -62,7 +62,7 @@ async function getBidById(bidId: SelectBid["bidId"]) {
 
 async function createBid(data: InsertBid) {
   const result = await db.insert(bidsTable).values(data).returning();
-  // revalidatePath("/cases");
+  revalidatePath(`/buscar-casos/${data.caseId}`);
   return result;
 }
 
@@ -84,7 +84,7 @@ async function updateBid(
     throw new Error(`No se encontró ninguna propuesta con el ID: ${bidId}`);
   }
 
-  // revalidatePath("/cases");
+  revalidatePath(`/buscar-casos/${data.caseId}`);
   return result[0];
 }
 

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { deleteCookie, setCookie } from "cookies-next";
@@ -195,12 +194,12 @@ export default function LoginForm() {
                 <FormItem>
                   <div className="flex items-center justify-between">
                     <FormLabel className="text-base">Contraseña</FormLabel>
-                    <Link
+                    {/* <Link
                       href="/forgot-password"
                       className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
                     >
                       ¿Olvidaste tu contraseña?
-                    </Link>
+                    </Link> */}
                   </div>
                   <FormControl>
                     <Input
