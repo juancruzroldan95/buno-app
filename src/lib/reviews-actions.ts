@@ -1,8 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { and, eq, inArray } from "drizzle-orm";
-import { bidsTable } from "@/db/schemas/bids-schema";
+import { and, eq } from "drizzle-orm";
 import {
   InsertReview,
   SelectReview,
@@ -117,44 +116,6 @@ async function getAllReviewsByClientId(clientId: SelectReview["clientId"]) {
   return result;
 }
 
-async function getAverageRatingForLawyer(lawyerId: string) {
-  if (!lawyerId) {
-    throw new Error("El ID del abogado no puede estar vacío.");
-  }
-
-  const acceptedCases = await db
-    .select({ caseId: bidsTable.caseId })
-    .from(bidsTable)
-    .where(
-      and(
-        eq(bidsTable.lawyerId, lawyerId),
-        eq(bidsTable.status, "accepted"),
-        eq(bidsTable.isDeleted, false)
-      )
-    );
-
-  const caseIds = acceptedCases.map((bid) => bid.caseId);
-
-  if (caseIds.length === 0) return 0;
-
-  const reviews = await db
-    .select({ rating: reviewsTable.rating })
-    .from(reviewsTable)
-    .where(
-      and(
-        inArray(reviewsTable.caseId, caseIds),
-        eq(reviewsTable.isDeleted, false)
-      )
-    );
-
-  if (reviews.length === 0) return 0;
-
-  const total = reviews.reduce((acc, curr) => acc + curr.rating, 0);
-  const average = total / reviews.length;
-
-  return Number(average.toFixed(2));
-}
-
 export {
   getReviewByCaseId,
   getReviewById,
@@ -162,5 +123,4 @@ export {
   updateReview,
   deleteReview,
   getAllReviewsByClientId,
-  getAverageRatingForLawyer,
 };
