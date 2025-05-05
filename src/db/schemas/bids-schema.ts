@@ -13,7 +13,7 @@ export const bidsTable = pgTable("bids_table", {
     .notNull(),
   bidAmount: numeric("bid_amount", { precision: 10, scale: 2 }),
   bidType: text("bid_type"),
-  status: bidStatusEnum("status").notNull().default("pending"),
+  status: bidStatusEnum("status").notNull().default("sent"),
   lawyerId: uuid("lawyer_id")
     .references(() => lawyersTable.lawyerId)
     .notNull(),

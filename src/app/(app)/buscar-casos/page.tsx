@@ -9,7 +9,7 @@ export default async function SearchCasesPage() {
   const lawAreasData = await getAllLawAreas();
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-3 py-6 sm:px-6 lg:px-8">
       <div className="md:flex md:items-center md:justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold">Buscar casos</h1>

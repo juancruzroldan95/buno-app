@@ -5,15 +5,7 @@ import { es } from "date-fns/locale";
 import { ArrowLeft, Calendar, MapPin, Phone, Scale, User2 } from "lucide-react";
 import { getCaseById } from "@/lib/cases-actions";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { ContactButton } from "./components/ContactButton";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +26,7 @@ export default async function CaseDetailPage({
   const caseData = await getCaseById(caseId);
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-3 py-6 sm:px-6 lg:px-8">
       <div className="mb-8 space-y-2">
         <div className="flex items-center gap-2 mb-4">
           <Link href="/tus-casos">
@@ -141,13 +133,12 @@ export default async function CaseDetailPage({
                     </div>
                     <ContactButton
                       uid={bid.lawyer.uid}
+                      bidId={bid.bidId}
                       email={bid.lawyer.email}
                       phone={bid.lawyer.phone}
                     />
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    {bid.proposal}
-                  </p>
+                  <p className="text-muted-foreground">{bid.proposal}</p>
                 </CardContent>
               </Card>
             ))}

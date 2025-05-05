@@ -63,7 +63,7 @@ const calculateProfileProgress = () => {
 
 export default function HomePage() {
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-3 py-6 sm:px-6 lg:px-8">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold">Hola, Juan Cruz</h1>

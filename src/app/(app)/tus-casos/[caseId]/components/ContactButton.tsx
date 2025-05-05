@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { Phone } from "lucide-react";
+import { seenBid } from "@/lib/bids-actions";
 import { sendLog } from "@/lib/logs-actions";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,15 +15,24 @@ import {
 
 interface ContactButtonProps {
   uid: string | null;
+  bidId: string | null;
   email?: string | null;
   phone?: string | null;
 }
 
-export function ContactButton({ uid, email, phone }: ContactButtonProps) {
+export function ContactButton({
+  uid,
+  bidId,
+  email,
+  phone,
+}: ContactButtonProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleClick = () => {
     startTransition(() => {
+      if (bidId) {
+        seenBid(bidId); // 👈 marcar la propuesta como vista
+      }
       // sendLog({ eventName: "contact-lawyer", uid });
     });
   };

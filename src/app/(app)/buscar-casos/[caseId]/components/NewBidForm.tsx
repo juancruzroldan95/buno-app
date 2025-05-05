@@ -90,7 +90,7 @@ export default function NewBidForm({
       toast({
         title: "Propuesta enviada",
         description:
-          "Tu propuesta fue enviada con éxito al cliente. Podés ver tus propuestas enviadas en la sección Mis Casos.",
+          "Tu propuesta fue enviada con éxito al cliente. Podés ver tus propuestas enviadas en la sección Mis Propuestas.",
         duration: 15000,
       });
 

@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CaseDetailSkeleton() {
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-3 py-6 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-8 space-y-2">
         <div className="flex items-center gap-2 mb-4">

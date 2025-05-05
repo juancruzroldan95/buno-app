@@ -55,7 +55,7 @@ const CLIENT_STEPS = [
 
 export default function ClientHowItWorksPage() {
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-3 py-6 sm:px-6 lg:px-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">¿Cómo funciona?</h1>
         <p className="text-gray-500">

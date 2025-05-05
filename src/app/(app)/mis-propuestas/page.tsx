@@ -1,25 +1,31 @@
-import { BriefcaseBusiness, Hourglass } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { getAuthenticatedAppForUser } from "@/firebase/serverApp";
+import { getAllBidsByLawyerId } from "@/lib/bids-actions";
+import { getLawyerByUserId } from "@/lib/lawyers-actions";
+import { getUserByUid } from "@/lib/users-actions";
+import { MyBidsList } from "./components/MyBidsList";
 
-export default function MyCasesPage() {
+export default async function MyBidsPage() {
+  const { currentUser } = await getAuthenticatedAppForUser();
+  const dbUser = await getUserByUid(currentUser?.uid as string);
+  if (dbUser.roleId !== 1) {
+    return <div>Acceso no autorizado</div>;
+  }
+
+  const lawyerData = await getLawyerByUserId(dbUser.uid);
+  const bidsData = await getAllBidsByLawyerId(lawyerData.lawyerId);
+
   return (
-    <section className="max-w-4xl mx-auto px-4 py-20 text-center">
-      <div className="flex justify-center mb-6">
-        <BriefcaseBusiness className="h-12 w-12 text-blue-600" />
+    <div className="max-w-7xl mx-auto px-3 py-6 sm:px-6 lg:px-8">
+      <div className="md:flex md:items-center md:justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold">Mis propuestas</h1>
+          <p className="text-muted-foreground">
+            Acá podés ver, editar y gestionar tus propuestas enviadas.
+          </p>
+        </div>
       </div>
-      <h1 className="text-3xl font-semibold mb-2">Mis casos</h1>
-      <p className="text-muted-foreground mb-6">
-        En esta sección vas a poder ver todos los casos en los que estás
-        trabajando como abogado, revisar propuestas enviadas y hacer seguimiento
-        del estado de cada una.
-      </p>
-      <div className="flex flex-col items-center gap-4">
-        <Hourglass className="h-10 w-10 text-gray-400" />
-        <p className="text-gray-500">Todavía no tenés casos en curso.</p>
-        <Button variant="outline" disabled>
-          Esta sección estará disponible pronto
-        </Button>
-      </div>
-    </section>
+
+      <MyBidsList bids={bidsData} />
+    </div>
   );
 }

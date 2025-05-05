@@ -5,7 +5,6 @@ import { getAuthenticatedAppForUser } from "@/firebase/serverApp";
 import { getCaseById } from "@/lib/cases-actions";
 import { getLawyerByUserId } from "@/lib/lawyers-actions";
 import { getUserByUid } from "@/lib/users-actions";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreateBidModal } from "./components/CreateBidModal";
 
@@ -23,8 +22,12 @@ export default async function CaseDetailForLawyerPage({
   const caseData = await getCaseById(caseId);
   const lawyerData = await getLawyerByUserId(dbUser.uid);
 
+  const existingBid = caseData.bids.find(
+    (bid) => bid.lawyer.lawyerId === lawyerData.lawyerId
+  );
+
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-3 py-6 sm:px-6 lg:px-8">
       <div className="mb-8 space-y-2">
         <div className="flex items-center gap-2 mb-4">
           <Link href="/buscar-casos">
@@ -91,6 +94,7 @@ export default async function CaseDetailForLawyerPage({
           <CreateBidModal
             caseId={caseData.caseId}
             lawyerId={lawyerData.lawyerId}
+            isDisabled={!!existingBid}
           />
         </div>
       ) : (

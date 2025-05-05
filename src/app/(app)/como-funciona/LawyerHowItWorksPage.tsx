@@ -51,7 +51,7 @@ const LAWYER_STEPS = [
     title: "Paso 4: Seguimiento de propuestas",
     description: (
       <>
-        Desde <strong>Menú {">"} Mis Casos</strong> vas a poder hacer
+        Desde <strong>Menú {">"} Mis Propuestas</strong> vas a poder hacer
         seguimiento de todas tus propuestas enviadas, ver tus trabajos actuales
         o activos, y asegurarte de no perder el rastro de tus casos activos.
       </>
@@ -61,7 +61,7 @@ const LAWYER_STEPS = [
 
 export default function LawyerHowItWorksPage() {
   return (
-    <div className="max-w-7xl mx-auto px-6 py-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-3 py-6 sm:px-6 lg:px-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">¿Cómo funciona?</h1>
         <p className="text-gray-500">
