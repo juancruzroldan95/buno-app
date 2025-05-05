@@ -1,7 +1,13 @@
 import ProfileAvatar from "@/app/(app)/components/ProfileAvatar";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Building2, Calendar, GraduationCap, Landmark } from "lucide-react";
+import {
+  BadgeCheck,
+  Building2,
+  Calendar,
+  GraduationCap,
+  Landmark,
+} from "lucide-react";
 import { getAllEducations } from "@/lib/educations-actions";
 import { getAllExperiences } from "@/lib/experiences-actions";
 import { getAllLawAreas } from "@/lib/law-areas-actions";
@@ -16,6 +22,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import CreateEducationModal from "./components/CreateEducationModal";
 import CreateExperienceModal from "./components/CreateExperienceModal";
 import DeleteEducationModal from "./components/DeleteEducationModal";
@@ -39,7 +51,34 @@ export default async function LawyerProfilePage({
   return (
     <div className="max-w-7xl mx-auto px-3 py-6 sm:px-6 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Mi Perfil</h1>
+        <div className="flex flex-row items-center gap-4">
+          <h1 className="text-3xl font-bold">Mi Perfil</h1>
+          <TooltipProvider>
+            {lawyerData.verifiedStatus === "pending" ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <BadgeCheck className="text-gray-400" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Aún no hemos verificado tu perfil</p>
+                </TooltipContent>
+              </Tooltip>
+            ) : lawyerData.verifiedStatus === "verified" ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span>
+                    <BadgeCheck className="text-sky-500" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Tu perfil está verificado</p>
+                </TooltipContent>
+              </Tooltip>
+            ) : null}
+          </TooltipProvider>
+        </div>
         <p className="text-gray-500">
           Acá podés actualizar tu información personal y profesional
         </p>

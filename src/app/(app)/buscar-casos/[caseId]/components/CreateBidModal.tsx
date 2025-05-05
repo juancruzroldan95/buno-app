@@ -23,17 +23,25 @@ interface CreateBidModalProps {
   caseId: string;
   caseDescription: string;
   lawyerId: string;
-  isDisabled: boolean;
+  hasAlreadyBid: boolean;
+  isVerified: boolean;
 }
 
 export function CreateBidModal({
   caseId,
   caseDescription,
   lawyerId,
-  isDisabled,
+  hasAlreadyBid,
+  isVerified,
 }: CreateBidModalProps) {
   const [open, setOpen] = useState(false);
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+
+  const isDisabled = hasAlreadyBid || !isVerified;
+
+  const tooltipText = hasAlreadyBid
+    ? "Ya enviaste una propuesta para este caso"
+    : "Tu perfil debe estar verificado para enviar propuestas";
 
   const handleTouchStart = () => {
     if (isDisabled) {
@@ -56,12 +64,12 @@ export function CreateBidModal({
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Ya enviaste una propuesta para este caso</p>
+                <p>{tooltipText}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         ) : (
-          <Button className="w-full md:w-auto" disabled={isDisabled}>
+          <Button className="w-full md:w-auto">
             <PenTool className="size-4" />
             Escribir propuesta
           </Button>

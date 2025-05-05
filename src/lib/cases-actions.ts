@@ -44,14 +44,32 @@ async function getCaseById(caseId: SelectCase["caseId"]) {
     .from(casesTable)
     .leftJoin(
       lawAreasCatalog,
-      eq(casesTable.lawAreaId, lawAreasCatalog.lawAreaId)
+      and(
+        eq(casesTable.lawAreaId, lawAreasCatalog.lawAreaId),
+        eq(lawAreasCatalog.isDeleted, false)
+      )
     )
     .leftJoin(
       provincesCatalog,
-      eq(casesTable.provinceId, provincesCatalog.provinceId)
+      and(
+        eq(casesTable.provinceId, provincesCatalog.provinceId),
+        eq(provincesCatalog.isDeleted, false)
+      )
     )
-    .leftJoin(bidsTable, eq(casesTable.caseId, bidsTable.caseId))
-    .leftJoin(lawyersTable, eq(bidsTable.lawyerId, lawyersTable.lawyerId))
+    .leftJoin(
+      bidsTable,
+      and(
+        eq(casesTable.caseId, bidsTable.caseId),
+        eq(bidsTable.isDeleted, false)
+      )
+    )
+    .leftJoin(
+      lawyersTable,
+      and(
+        eq(bidsTable.lawyerId, lawyersTable.lawyerId),
+        eq(lawyersTable.isDeleted, false)
+      )
+    )
     .where(and(eq(casesTable.caseId, caseId), eq(casesTable.isDeleted, false)));
 
   if (result.length === 0) {

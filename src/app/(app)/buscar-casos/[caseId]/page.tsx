@@ -95,7 +95,8 @@ export default async function CaseDetailForLawyerPage({
             caseId={caseData.caseId}
             caseDescription={caseData.description}
             lawyerId={lawyerData.lawyerId}
-            isDisabled={!!existingBid}
+            hasAlreadyBid={!!existingBid}
+            isVerified={lawyerData.verifiedStatus === "verified"}
           />
         </div>
       ) : (
