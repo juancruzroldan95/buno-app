@@ -11,9 +11,9 @@ import {
 
 export default function HomePage() {
   return (
-    <div className="bg-gray-50 mx-auto">
+    <div className="mx-auto">
       {/* Hero */}
-      <section className="relative overflow-hidden py-16">
+      <section className="relative overflow-hidden py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="relative z-10 pb-5 bg-gray-50 lg:max-w-2xl lg:w-full">
             <svg
@@ -78,7 +78,7 @@ export default function HomePage() {
       </section>
 
       {/* Qué es Buno */}
-      <section className="py-16 bg-white">
+      <section className="py-20 bg-slate-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
             <h2 className="text-base text-primary font-semibold tracking-wide uppercase">
@@ -124,7 +124,7 @@ export default function HomePage() {
       </section>
 
       {/* Call to Action final */}
-      <section className="py-16 bg-slate-100">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
             ¿Qué necesitás hoy?

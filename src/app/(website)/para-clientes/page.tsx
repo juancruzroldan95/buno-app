@@ -108,11 +108,11 @@ const steps = [
 
 export default function ForClientsPage() {
   return (
-    <div className="bg-gray-50 mx-auto">
+    <div className="mx-auto">
       {/* Hero */}
       <section
         id="hero-for-lawyers"
-        className="py-12 flex flex-col justify-center items-center"
+        className="py-20 bg-gray-50 flex flex-col justify-center items-center"
       >
         <div className="md:w-2/3 lg:w-1/2 px-4">
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-slate-900 text-center md:text-5xl lg:text-6xl">
@@ -135,7 +135,7 @@ export default function ForClientsPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-12 bg-slate-100">
+      <section className="py-20 bg-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
             <h2 className="text-base text-primary font-semibold tracking-wide uppercase">
@@ -151,7 +151,7 @@ export default function ForClientsPage() {
           </div>
 
           <div className="mt-10">
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
               {steps.map((step, index) => (
                 <Card key={step.title}>
                   <CardHeader>
@@ -171,7 +171,7 @@ export default function ForClientsPage() {
       </section>
 
       {/* Services */}
-      <section className="py-12">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
             <h3 className="text-base text-primary font-semibold tracking-wide uppercase">
@@ -187,7 +187,7 @@ export default function ForClientsPage() {
           </div>
 
           <div className="mt-10">
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               {services.map((service) => (
                 <Card key={service.title}>
                   <CardHeader className="flex flex-row pb-3 gap-x-3">

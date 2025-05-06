@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export default function AboutUsPage() {
   return (
-    <div className="my-16 flex flex-col items-center justify-center text-center p-4">
+    <div className="mt-20 flex flex-col items-center justify-center text-center p-4">
       <Users2 className="w-16 h-16 text-blue-600 mb-4" />
       <h1 className="text-2xl md:text-3xl font-semibold mb-2">
         Sobre nosotros

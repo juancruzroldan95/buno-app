@@ -69,11 +69,11 @@ const steps = [
 
 export default function ForLawyersPage() {
   return (
-    <div className="bg-gray-50 mx-auto">
+    <div className="mx-auto">
       {/* Hero */}
       <section
         id="hero-for-lawyers"
-        className="py-12 flex flex-col justify-center items-center"
+        className="py-20 bg-gray-50 flex flex-col justify-center items-center"
       >
         <div className="md:w-2/3 lg:w-1/2 px-4">
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-slate-900 text-center md:text-5xl lg:text-6xl">
@@ -93,7 +93,7 @@ export default function ForLawyersPage() {
         </div>
       </section>
 
-      <section className="py-12 bg-slate-100">
+      <section className="py-20 bg-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-slate-900 mb-8 lg:text-center">
             ¿Por qué unirse a Buno?
@@ -116,13 +116,13 @@ export default function ForLawyersPage() {
         </div>
       </section>
 
-      <section className="py-12">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-slate-900 mb-8 lg:text-center">
             ¿Cómo funciona?
           </h2>
           <div className="mt-10">
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
               {steps.map((step, index) => (
                 <Card key={step.title}>
                   <CardHeader>
