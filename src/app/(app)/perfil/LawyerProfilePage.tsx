@@ -12,6 +12,7 @@ import { getAllEducations } from "@/lib/educations-actions";
 import { getAllExperiences } from "@/lib/experiences-actions";
 import { getAllLawAreas } from "@/lib/law-areas-actions";
 import { getLawyerByUserId } from "@/lib/lawyers-actions";
+import { getAllLicenses } from "@/lib/licenses-actions";
 import { getAllProvinces } from "@/lib/provinces-actions";
 import { SelectUser } from "@/db/schemas/users-schema";
 import {
@@ -30,8 +31,10 @@ import {
 } from "@/components/ui/tooltip";
 import CreateEducationModal from "./components/CreateEducationModal";
 import CreateExperienceModal from "./components/CreateExperienceModal";
+import CreateLicenseModal from "./components/CreateLicenseModal";
 import DeleteEducationModal from "./components/DeleteEducationModal";
 import DeleteExperienceModal from "./components/DeleteExperienceModal";
+import DeleteLicenseModal from "./components/DeleteLicenseModal";
 import PersonalLawyerForm from "./components/PersonalLawyerForm";
 import UpdateEducationModal from "./components/UpdateEducationModal";
 import UpdateExperienceModal from "./components/UpdateExperienceModal";
@@ -47,37 +50,13 @@ export default async function LawyerProfilePage({
   const lawAreasData = await getAllLawAreas();
   const experiences = await getAllExperiences(lawyerData.lawyerId);
   const educations = await getAllEducations(lawyerData.lawyerId);
+  const licenses = await getAllLicenses(lawyerData.lawyerId);
 
   return (
     <div className="max-w-7xl mx-auto px-3 py-6 sm:px-6 lg:px-8">
       <div className="mb-8">
         <div className="flex flex-row items-center gap-4">
           <h1 className="text-3xl font-bold">Mi Perfil</h1>
-          <TooltipProvider>
-            {lawyerData.verifiedStatus === "pending" ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span>
-                    <BadgeCheck className="text-gray-400" />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Aún no hemos verificado tu perfil</p>
-                </TooltipContent>
-              </Tooltip>
-            ) : lawyerData.verifiedStatus === "verified" ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span>
-                    <BadgeCheck className="text-sky-500" />
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Tu perfil está verificado</p>
-                </TooltipContent>
-              </Tooltip>
-            ) : null}
-          </TooltipProvider>
         </div>
         <p className="text-gray-500">
           Acá podés actualizar tu información personal y profesional
@@ -91,6 +70,7 @@ export default async function LawyerProfilePage({
               <span className="hidden sm:inline">Información Personal</span>
               <span className="sm:hidden">Información</span>
             </TabsTrigger>
+            <TabsTrigger value="licenses">Matrículas</TabsTrigger>
             <TabsTrigger value="experience">
               <span className="hidden sm:inline">Experiencia profesional</span>
               <span className="sm:hidden">Experiencia</span>
@@ -130,6 +110,82 @@ export default async function LawyerProfilePage({
                   provinces={provincesData}
                   lawAreas={lawAreasData}
                 />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="licenses">
+            <Card>
+              <CardHeader>
+                <div className="md:flex md:items-center md:justify-between">
+                  <div>
+                    <CardTitle>Matrículas</CardTitle>
+                    <CardDescription>
+                      Agregá o actualizá tus matrículas para que puedas enviar
+                      propuestas
+                    </CardDescription>
+                  </div>
+                  <div className="text-center md:text-right mt-4 md:mt-0">
+                    <CreateLicenseModal lawyerId={lawyerData.lawyerId} />
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {licenses.map((license) => (
+                    <Card key={license.licenseId}>
+                      <CardHeader>
+                        <div className="flex justify-between items-start">
+                          <CardTitle className="flex gap-x-2 break-words overflow-hidden">
+                            {license.barAssociation}
+                            <TooltipProvider>
+                              {license.verifiedStatus === "pending" ? (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <span>
+                                      <BadgeCheck className="text-gray-400" />
+                                    </span>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      Aún no hemos verificado esta matrícula
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              ) : license.verifiedStatus === "verified" ? (
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <span>
+                                      <BadgeCheck className="text-sky-500" />
+                                    </span>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Esta matrícula está verificada</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              ) : null}
+                            </TooltipProvider>
+                          </CardTitle>
+                          <div className="flex flex-col md:flex-row">
+                            {/* <UpdateLicenseModal license={license} /> */}
+                            <DeleteLicenseModal licenseId={license.licenseId} />
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <CardDescription className="flex items-center gap-x-2 break-words overflow-hidden">
+                          <p className="text-black mt-2">
+                            Tomo: <strong>{license.volume}</strong>
+                          </p>
+                          <p className="mt-2">-</p>
+                          <p className="text-black mt-2">
+                            Folio: <strong>{license.folio}</strong>
+                          </p>
+                        </CardDescription>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

@@ -10,7 +10,7 @@ import {
 import { bidsTable } from "./bids-schema";
 import { timestamps } from "./columns-helpers";
 import { educationsTable } from "./educations-schema";
-import { genderEnum, verifiedStatusEnum } from "./enums";
+import { genderEnum } from "./enums";
 import { experiencesTable } from "./experiences-schema";
 import { lawyersToLawAreas } from "./lawyers-to-law-areas-schema";
 import { provincesCatalog } from "./provinces-schema";
@@ -28,14 +28,8 @@ export const lawyersTable = pgTable("lawyers_table", {
   ),
   gender: genderEnum("gender"),
   bio: text("bio"),
-  jurisdiction: text("jurisdiction"),
-  documentNumer: text("document_number"),
+  documentNumber: integer("document_number"),
   birthDate: date("birth_date", { mode: "date" }),
-  lawyerSchool: text("lawyer_school"),
-  licenseNumber: text("license_number"),
-  verifiedStatus: verifiedStatusEnum("verified_status")
-    .notNull()
-    .default("pending"),
   linkedinUrl: text("linkedin_url"),
   website: text("website"),
   rating: numeric("rating", { precision: 3, scale: 2 }),

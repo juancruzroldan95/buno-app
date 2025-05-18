@@ -43,72 +43,55 @@ interface PersonalLawyerFormProps {
   lawAreas: LawAreaSelector[];
 }
 
+const lawyerProfileFormSchema = z.object({
+  firstName: z
+    .string({ required_error: "Tu nombre es obligatorio" })
+    .min(2, "Tu nombre debe tener al menos 2 caracteres"),
+  lastName: z
+    .string({ required_error: "Tu apellido es obligatorio" })
+    .min(2, "Tu apellido debe tener al menos 2 caracteres"),
+  email: z
+    .string({ required_error: "El email es obligatorio" })
+    .email("Email inválido"),
+  phone: z
+    .string({ required_error: "El número de teléfono es obligatorio" })
+    .min(10, "Número de teléfono inválido")
+    .optional()
+    .or(z.literal("")),
+  gender: z.enum(["male", "female", "non_binary", "other"], {
+    required_error: "El género es obligatorio",
+  }),
+  birthDate: z.date({
+    required_error: "La fecha de nacimiento es obligatoria",
+  }),
+  provinceId: z.number({ required_error: "La provincia es obligatoria" }),
+  documentNumber: z
+    .number({ required_error: "El número de documento es obligatorio" })
+    .min(7, "El número de documento debe tener al menos 7 caracteres"),
+  lawAreaIds: z
+    .array(z.number())
+    .refine((value) => value.some((item) => item), {
+      message: "Debes seleccionar al menos un área de derecho",
+    }),
+  bio: z.string().min(20, "La biografía debe tener al menos 20 caracteres"),
+  linkedinUrl: z
+    .string()
+    .url("URL inválida, debe empezar con https://")
+    .optional()
+    .or(z.literal("")),
+  website: z
+    .string()
+    .url("URL inválida, debe empezar con https://")
+    .optional()
+    .or(z.literal("")),
+});
+
 export default function PersonalLawyerForm({
   initialData,
   provinces,
   lawAreas,
 }: PersonalLawyerFormProps) {
   const { toast } = useToast();
-
-  const lawyerProfileFormSchema = z.object({
-    firstName: z
-      .string({ required_error: "Tu nombre es obligatorio" })
-      .min(2, "Tu nombre debe tener al menos 2 caracteres"),
-    lastName: z
-      .string({ required_error: "Tu apellido es obligatorio" })
-      .min(2, "Tu apellido debe tener al menos 2 caracteres"),
-    email: z
-      .string({ required_error: "El email es obligatorio" })
-      .email("Email inválido"),
-    phone: z
-      .string({ required_error: "El número de teléfono es obligatorio" })
-      .min(10, "Número de teléfono inválido")
-      .optional()
-      .or(z.literal("")),
-    gender: z.enum(["male", "female", "non_binary", "other"], {
-      required_error: "El género es obligatorio",
-    }),
-    birthDate: z.date({
-      required_error: "La fecha de nacimiento es obligatoria",
-    }),
-    provinceId: z.number({ required_error: "La provincia es obligatoria" }),
-    jurisdiction: z.string().optional().or(z.literal("")),
-    lawyerSchool: z
-      .string({ required_error: "El colegio de abogados es obligatorio" })
-      .min(3, "El colegio de abogados debe tener al menos 3 caracteres"),
-    licenseNumber: z
-      .string({ required_error: "El número de matrícula es obligatorio" })
-      .min(4, "El número de matrícula debe tener al menos 4 caracteres"),
-    lawAreaIds: z
-      .array(z.number())
-      .refine((value) => value.some((item) => item), {
-        message: "Debes seleccionar al menos un área de derecho",
-      }),
-    bio: z.string().min(20, "La biografía debe tener al menos 20 caracteres"),
-    linkedinUrl: z
-      .string()
-      .url("URL de LinkedIn inválida")
-      .optional()
-      .or(z.literal("")),
-    website: z
-      .string()
-      .optional()
-      .or(z.literal(""))
-      .refine(
-        (val) => {
-          if (!val) return true;
-          try {
-            new URL(val.startsWith("http") ? val : `https://${val}`);
-            return true;
-          } catch {
-            return false;
-          }
-        },
-        {
-          message: "Página web inválida",
-        }
-      ),
-  });
 
   const lawyerProfileForm = useForm<z.infer<typeof lawyerProfileFormSchema>>({
     resolver: zodResolver(lawyerProfileFormSchema),
@@ -120,9 +103,7 @@ export default function PersonalLawyerForm({
       gender: initialData.gender || undefined,
       birthDate: initialData.birthDate || undefined,
       provinceId: initialData.provinceId || undefined,
-      jurisdiction: initialData.jurisdiction || "",
-      lawyerSchool: initialData.lawyerSchool || "",
-      licenseNumber: initialData.licenseNumber || "",
+      documentNumber: initialData.documentNumber || undefined,
       lawAreaIds: initialData.lawAreaIds || [],
       bio: initialData.bio || "",
       linkedinUrl: initialData.linkedinUrl || "",
@@ -319,44 +300,16 @@ export default function PersonalLawyerForm({
           />
           <FormField
             control={lawyerProfileForm.control}
-            name="jurisdiction"
+            name="documentNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base">Jurisdicción</FormLabel>
+                <FormLabel className="text-base">Documento*</FormLabel>
                 <FormControl>
-                  <Input {...field} type="text" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <FormField
-            control={lawyerProfileForm.control}
-            name="lawyerSchool"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base">
-                  Colegio de Abogados*
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={lawyerProfileForm.control}
-            name="licenseNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base">
-                  Número de Matrícula*
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} />
+                  <Input
+                    {...field}
+                    type="number"
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

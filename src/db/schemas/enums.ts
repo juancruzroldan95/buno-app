@@ -21,7 +21,6 @@ export type BidStatus = (typeof bidStatusEnum.enumValues)[number];
 
 export const verifiedStatusEnum = pgEnum("verified_status", [
   "pending",
-  "in_review",
   "verified",
   "rejected",
 ]);
