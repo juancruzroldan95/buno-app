@@ -7,6 +7,7 @@ import { getLawyerByUserId } from "@/lib/lawyers-actions";
 import { getUserByUid } from "@/lib/users-actions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreateBidModal } from "./components/CreateBidModal";
+import { getAllLicenses } from "@/lib/licenses-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,10 @@ export default async function CaseDetailForLawyerPage({
   const { caseId } = await params;
   const caseData = await getCaseById(caseId);
   const lawyerData = await getLawyerByUserId(dbUser.uid);
+  const lawyerLicenses = await getAllLicenses(lawyerData.lawyerId);
+  const isLawyerVerified = lawyerLicenses.some(
+    (license) => license.verifiedStatus === "verified"
+  );
 
   const existingBid = caseData.bids.find(
     (bid) => bid.lawyer.lawyerId === lawyerData.lawyerId
@@ -96,7 +101,7 @@ export default async function CaseDetailForLawyerPage({
             caseDescription={caseData.description}
             lawyerId={lawyerData.lawyerId}
             hasAlreadyBid={!!existingBid}
-            isVerified={lawyerData.verifiedStatus === "verified"}
+            isVerified={isLawyerVerified}
           />
         </div>
       ) : (
